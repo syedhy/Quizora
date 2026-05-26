@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { cn } from '@/lib/utils';
 import { modes, type FinishReason, type OptionKey, type Question, type QuizMode } from '@/quiz';
 import { AppHeader } from './ModeSelectionPage';
@@ -45,41 +46,57 @@ export function ResultPage({
 
   return (
     <main className="result-page app-page">
-      <AppHeader active="Results" goHome={goModes} />
+      <AppHeader goHome={goModes} />
 
       <section className="result-stage">
-        <article className="result-title-card" aria-label="Quiz results summary">
-          <div className="result-doodle-mark" aria-hidden="true">
-            <span>{percentScore}%</span>
-          </div>
-          <p className="section-kicker">{resultCopy[finishReason]}</p>
-          <h1>{resultLabel}</h1>
-          <p className="result-score">
-            {score}/{resultTotal} correct in {fileName}
-          </p>
-          <div className="result-meta-grid" aria-label="Result highlights">
-            <span>
-              <strong>{modeTitle}</strong>
-              Mode
-            </span>
-            <span>
-              <strong>{answeredCount}</strong>
-              Attempted
-            </span>
-            <span>
-              <strong>{skippedCount + notReachedCount}</strong>
-              Skipped
-            </span>
-          </div>
-          <div className="result-actions">
-            <Button onClick={restartQuiz} variant="solid">
-              Try again
-            </Button>
-            <Button onClick={goModes} variant="ghost">
-              Change setup
-            </Button>
-          </div>
-        </article>
+        <CardContainer className="result-card-tilt">
+          <CardBody className="result-title-card" role="article" aria-label="Quiz results summary">
+            <CardItem className="result-doodle-mark" translateZ={70} aria-hidden="true">
+              <span>{percentScore}%</span>
+            </CardItem>
+            <CardItem translateZ={34}>
+              <p className="section-kicker">{resultCopy[finishReason]}</p>
+            </CardItem>
+            <CardItem translateZ={54}>
+              <h1>{resultLabel}</h1>
+            </CardItem>
+            <CardItem translateZ={38}>
+              <p className="result-score">
+                {score}/{resultTotal} correct in {fileName}
+              </p>
+            </CardItem>
+            <CardItem className="result-meta-grid" translateZ={28} aria-label="Result highlights">
+              <span>
+                <strong>{modeTitle}</strong>
+                Mode
+              </span>
+              <span>
+                <strong>{answeredCount}</strong>
+                Attempted
+              </span>
+              <span>
+                <strong>{skippedCount + notReachedCount}</strong>
+                Skipped
+              </span>
+            </CardItem>
+            <CardItem className="result-actions" translateZ={42}>
+              <Button onClick={restartQuiz} variant="solid">
+                Try again
+              </Button>
+              <Button onClick={goModes} variant="ghost">
+                Change setup
+              </Button>
+            </CardItem>
+            <CardItem translateZ={34}>
+              <a
+                className="result-idea-link"
+                href="mailto:syedhyderalihamdani@gmail.com?subject=Quizora%20quiz%20idea"
+              >
+                Tell us ideas for your next quiz
+              </a>
+            </CardItem>
+          </CardBody>
+        </CardContainer>
 
         <section className="review-panel" aria-labelledby="review-title">
           <div className="review-heading">

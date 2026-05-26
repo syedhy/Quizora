@@ -14,18 +14,17 @@ import {
 } from '@/quiz';
 
 type AppHeaderProps = {
-  active: string;
   goHome: () => void;
 };
 
-export function AppHeader({ active, goHome }: AppHeaderProps) {
+export function AppHeader({ goHome }: AppHeaderProps) {
   return (
     <header className="app-header">
       <button className="brand-mark" onClick={goHome} type="button">
         Quizora
       </button>
       <div className="header-tabs">
-        <span>{active}</span>
+        <a href="mailto:syedhyderalihamdani@gmail.com?subject=Quizora%20Feedback">Reach Us</a>
       </div>
     </header>
   );
@@ -49,7 +48,7 @@ export function SetupPage({ continueToLibrary, settings, stats, updateSettings }
 
   return (
     <main className="page-shell app-page">
-      <AppHeader active="Setup" goHome={() => undefined} />
+      <AppHeader goHome={() => undefined} />
 
       <section className="setup-layout">
         <div className="setup-copy">
@@ -175,7 +174,7 @@ export function QuizLibraryPage({
 
   return (
     <main className="page-shell app-page">
-      <AppHeader active="Library" goHome={goBack} />
+      <AppHeader goHome={goBack} />
 
       <section className="library-layout">
         <div className="library-heading">

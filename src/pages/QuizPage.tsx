@@ -176,6 +176,10 @@ function CatAssistant({ currentIndex, isAnswered, isCorrect, mode, questionId, s
   const [assistantImage, setAssistantImage] = React.useState(() => randomAssistantImage(rightAssistantImages));
 
   React.useEffect(() => {
+    if (!isAnswered) {
+      return;
+    }
+
     const imagePool = isAnswered && !isCorrect ? wrongAssistantImages : rightAssistantImages;
     setAssistantImage((currentImage) => randomAssistantImage(imagePool, currentImage));
   }, [isAnswered, isCorrect, questionId]);

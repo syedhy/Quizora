@@ -3,7 +3,9 @@ export const TIMED_SECONDS = 30;
 export const STATS_KEY = 'quizora-stats-v5';
 
 export type OptionKey = 'A' | 'B' | 'C' | 'D';
-export type QuizMode = 'classic' | 'timed' | 'survival';
+export type QuizDifficulty = 'easy' | 'medium' | 'hard';
+export type LlmProvider = 'openai' | 'gemini';
+export type QuizMode = 'classic' | 'timed' | 'survival' | 'llm';
 export type Screen = 'landing' | 'modes' | 'quiz' | 'results';
 export type FinishReason = 'complete' | 'manual' | 'time' | 'survival';
 
@@ -24,6 +26,14 @@ export type QuizStats = {
   quizzesPlayed: number;
   totalCorrect: number;
   totalWrong: number;
+};
+
+export type LlmQuizConfig = {
+  apiKey: string;
+  difficulty: QuizDifficulty;
+  model: string;
+  provider: LlmProvider;
+  topic: string;
 };
 
 export const defaultStats: QuizStats = {
@@ -66,6 +76,12 @@ export const modes: Array<{
     title: 'Survival',
     kicker: 'One life',
     description: 'Correct answers continue the run. One wrong choice ends it.',
+  },
+  {
+    id: 'llm',
+    title: 'LLM',
+    kicker: 'Generated',
+    description: 'Pick a topic and difficulty, then generate a fresh 10-question quiz.',
   },
 ];
 

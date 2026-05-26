@@ -47,7 +47,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -121,8 +122,8 @@ button:disabled {
 .mode-grid {
   align-items: center;
   display: grid;
-  gap: clamp(18px, 4vmin, 56px);
-  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: clamp(16px, 3vmin, 38px);
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
   margin: 0 auto;
   height: calc(100dvh - clamp(58px, 9dvh, 86px));
   min-height: 0;
@@ -132,16 +133,16 @@ button:disabled {
 }
 
 .mode-copy h1 {
-  font-size: clamp(2.35rem, min(6.8vw, 10dvh), 6.4rem);
-  max-width: 13ch;
+  font-size: clamp(2.1rem, min(4.4vw, 7dvh), 4.8rem);
+  max-width: 15ch;
 }
 
 .mode-copy > p {
   color: hsl(var(--muted-foreground));
-  font-size: clamp(0.92rem, min(1.35vw, 2dvh), 1.08rem);
-  line-height: 1.58;
-  margin: min(2.2dvh, 20px) 0 0;
-  max-width: 700px;
+  font-size: clamp(0.9rem, min(1.15vw, 1.8dvh), 1rem);
+  line-height: 1.45;
+  margin: min(1.4dvh, 14px) 0 0;
+  max-width: 560px;
 }
 
 .file-row {
@@ -149,7 +150,7 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   gap: 0.9rem;
-  margin-top: clamp(14px, 3dvh, 28px);
+  margin-top: clamp(12px, 2.2dvh, 20px);
 }
 
 .file-chip,
@@ -170,9 +171,9 @@ button:disabled {
 
 .mode-card-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: clamp(16px, 3dvh, 30px);
+  gap: clamp(0.7rem, 1.4vmin, 1rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(14px, 2.2dvh, 22px);
 }
 
 .mode-card {
@@ -182,9 +183,9 @@ button:disabled {
   box-shadow: 0 14px 34px rgba(33, 42, 62, 0.06);
   color: hsl(var(--foreground));
   display: grid;
-  gap: clamp(0.35rem, 0.9dvh, 0.65rem);
-  min-height: clamp(150px, 22dvh, 210px);
-  padding: clamp(14px, 2.2vmin, 24px);
+  gap: clamp(0.28rem, 0.7dvh, 0.5rem);
+  min-height: clamp(124px, 17dvh, 172px);
+  padding: clamp(12px, 1.8vmin, 20px);
   text-align: left;
   transition:
     border-color 180ms ease,
@@ -200,21 +201,22 @@ button:disabled {
 
 .mode-card span {
   color: hsl(var(--secondary));
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .mode-card strong {
   font-family: var(--font-display);
-  font-size: clamp(1.65rem, min(3vw, 4.8dvh), 2.8rem);
+  font-size: clamp(1.28rem, min(2.1vw, 3.6dvh), 2rem);
   letter-spacing: 0;
   line-height: 1.08;
 }
 
 .mode-card p {
   color: hsl(var(--muted-foreground));
-  line-height: 1.55;
+  font-size: 0.95rem;
+  line-height: 1.35;
   margin: 0;
 }
 
@@ -685,6 +687,57 @@ button:disabled {
   line-height: 1.55;
 }
 
+.llm-modal {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.llm-form-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.llm-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.llm-field span {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.llm-field input,
+.llm-field select {
+  appearance: none;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+  color: hsl(var(--foreground));
+  min-height: 48px;
+  outline: none;
+  padding: 0.72rem 0.9rem;
+  width: 100%;
+}
+
+.llm-field input:focus,
+.llm-field select:focus {
+  border-color: hsl(var(--foreground));
+}
+
+.llm-note,
+.llm-status {
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.llm-status {
+  color: hsl(var(--foreground));
+  font-weight: 700;
+}
+
 .modal-close {
   color: hsl(var(--muted-foreground));
   font-size: 0.85rem;
@@ -702,6 +755,10 @@ button:disabled {
   .mode-grid,
   .result-layout {
     grid-template-columns: 1fr;
+  }
+
+  .mode-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .mode-grid {
@@ -748,7 +805,7 @@ button:disabled {
   }
 
   .mode-copy h1 {
-    font-size: clamp(2rem, min(10vw, 7dvh), 3.7rem);
+    font-size: clamp(1.8rem, min(8.4vw, 6dvh), 3.2rem);
   }
 
   .mode-copy > p {
@@ -778,6 +835,40 @@ button:disabled {
   .mode-card p {
     font-size: 0.82rem;
     line-height: 1.35;
+  }
+
+  .llm-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .upload-modal {
+    border-radius: 20px;
+    max-height: calc(100dvh - 28px);
+    padding: 18px;
+  }
+
+  .upload-modal h2 {
+    font-size: clamp(1.55rem, 7.5vw, 2.15rem);
+    margin-bottom: 0.55rem;
+  }
+
+  .llm-modal {
+    gap: 0.62rem;
+  }
+
+  .llm-field {
+    gap: 0.25rem;
+  }
+
+  .llm-field input,
+  .llm-field select {
+    min-height: 44px;
+    padding: 0.6rem 0.78rem;
+  }
+
+  .llm-note,
+  .llm-status {
+    font-size: 0.86rem;
   }
 
   .stats-card {

@@ -52,7 +52,6 @@ function App() {
   }, [currentIndex, screen]);
 
   const currentQuestion = questions[currentIndex];
-  const answeredCount = Object.keys(answers).length;
   const score = React.useMemo(() => countCorrect(questions, answers), [answers, questions]);
   const progress = questions.length ? ((currentIndex + 1) / questions.length) * 100 : 0;
   const percentScore = percent(score, resultTotal);
@@ -163,11 +162,11 @@ function App() {
 
     setAnswers(nextAnswers);
 
-    if (selectedMode !== 'survival') {
+    if (selectedMode === 'classic') {
       return;
     }
 
-    if (optionKey !== currentQuestion.answer) {
+    if (selectedMode === 'survival' && optionKey !== currentQuestion.answer) {
       window.setTimeout(() => finishQuiz('survival', nextAnswers), 850);
       return;
     }
@@ -221,7 +220,6 @@ function App() {
     return (
       <QuizPage
         activeMode={activeMode}
-        answeredCount={answeredCount}
         answers={answers}
         chooseAnswer={chooseAnswer}
         currentIndex={currentIndex}

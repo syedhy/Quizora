@@ -79,8 +79,8 @@ export function LandingPage({ onBegin }: LandingPageProps) {
 
       <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 sm:px-8 sm:py-6">
         <button
-          className="leading-none tracking-[-0.035em] text-black"
-          style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(2rem, 3vw, 2.65rem)' }}
+          className="leading-none text-black"
+          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 3vw, 2.65rem)' }}
           type="button"
         >
           Quizora<sup className="ml-0.5 text-sm">®</sup>
@@ -101,8 +101,8 @@ export function LandingPage({ onBegin }: LandingPageProps) {
 
       <section className="relative z-10 flex flex-col items-center justify-center px-6 pb-40 pt-[calc(8rem_-_75px)] text-center">
         <h1
-          className="animate-fade-rise max-w-7xl text-[clamp(3rem,9.5vw,7.4rem)] font-normal leading-[0.95] tracking-[-1.5px] text-black sm:tracking-[-2px] md:tracking-[-2.46px]"
-          style={{ fontFamily: "'Instrument Serif', serif" }}
+          className="animate-fade-rise max-w-7xl text-[clamp(3rem,9.5vw,7.4rem)] font-bold leading-[1.04] text-black"
+          style={{ fontFamily: 'var(--font-display)' }}
         >
           Beyond <em className="not-italic text-[#6F6F6F]">silence,</em> we build{' '}
           <em className="not-italic text-[#6F6F6F]">the eternal.</em>

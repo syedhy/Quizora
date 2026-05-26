@@ -5,7 +5,6 @@ import { type OptionKey, type Question, type QuizMode, modes, questionFontSize }
 
 type QuizPageProps = {
   activeMode: (typeof modes)[number];
-  answeredCount: number;
   answers: Record<string, OptionKey>;
   chooseAnswer: (optionKey: OptionKey) => void;
   currentIndex: number;
@@ -23,7 +22,6 @@ type QuizPageProps = {
 
 export function QuizPage({
   activeMode,
-  answeredCount,
   answers,
   chooseAnswer,
   currentIndex,
@@ -40,6 +38,7 @@ export function QuizPage({
 }: QuizPageProps) {
   const selectedAnswer = answers[currentQuestion.id];
   const isAnswered = Boolean(selectedAnswer);
+  const isClassicMode = selectedMode === 'classic';
   const questionSize = questionFontSize(currentQuestion.prompt);
 
   return (
@@ -98,25 +97,24 @@ export function QuizPage({
           </div>
         </section>
 
-        {selectedMode === 'survival' ? (
-          <div className="quiz-footer single">
-            <p>Survival advances after every correct answer. A wrong choice reveals the answer, then ends the run.</p>
-            <Button disabled={!answeredCount} onClick={finishQuiz} variant="ghost">
-              End quiz
-            </Button>
-          </div>
-        ) : (
+        {isClassicMode ? (
           <div className="quiz-footer">
             <div className="quiz-footer-left">
               <Button disabled={currentIndex === 0} onClick={goPrevious} variant="ghost">
                 Previous
               </Button>
-              <Button disabled={!answeredCount} onClick={finishQuiz} variant="ghost">
+              <Button onClick={finishQuiz} variant="ghost">
                 End quiz
               </Button>
             </div>
             <Button disabled={!isAnswered} onClick={() => goNext()} variant="solid">
               {currentIndex === questionCount - 1 ? 'Finish quiz' : 'Next question'}
+            </Button>
+          </div>
+        ) : (
+          <div className="quiz-footer auto">
+            <Button onClick={finishQuiz} variant="ghost">
+              End quiz
             </Button>
           </div>
         )}

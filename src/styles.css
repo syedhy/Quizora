@@ -13,8 +13,8 @@
   --accent: 0 0% 0%;
   --border: 0 0% 86%;
   --input: 0 0% 86%;
-  --font-display: 'Instrument Serif', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
 }
 
 @theme inline {
@@ -39,6 +39,8 @@ html {
 body {
   color: hsl(var(--foreground));
   font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
   margin: 0;
   min-width: 320px;
   overflow-y: auto;
@@ -71,14 +73,14 @@ button:disabled {
   font-family: var(--font-display);
   font-size: clamp(1.35rem, 2.4vmin, 2.2rem);
   font-weight: 800;
-  letter-spacing: -0.045em;
+  letter-spacing: 0;
 }
 
 .section-kicker {
   color: hsl(var(--accent));
   font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0;
   margin: 0;
   text-transform: uppercase;
 }
@@ -87,8 +89,8 @@ button:disabled {
 .result-summary h1 {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
+  letter-spacing: 0;
+  line-height: 1.05;
   margin: 0;
 }
 
@@ -206,8 +208,8 @@ button:disabled {
 .mode-card strong {
   font-family: var(--font-display);
   font-size: clamp(1.65rem, min(3vw, 4.8dvh), 2.8rem);
-  letter-spacing: -0.055em;
-  line-height: 1;
+  letter-spacing: 0;
+  line-height: 1.08;
 }
 
 .mode-card p {
@@ -236,8 +238,8 @@ button:disabled {
 .stats-card h2 {
   font-family: var(--font-display);
   font-size: clamp(2rem, min(4vw, 6dvh), 3.8rem);
-  letter-spacing: -0.06em;
-  line-height: 1;
+  letter-spacing: 0;
+  line-height: 1.08;
   margin: 0.5rem 0 0;
 }
 
@@ -280,8 +282,8 @@ button:disabled {
   display: block;
   font-size: clamp(1.65rem, min(3.2vw, 5dvh), 2.55rem);
   font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
+  letter-spacing: 0;
+  line-height: 1.05;
   text-align: center;
   white-space: nowrap;
   width: auto;
@@ -309,7 +311,7 @@ button:disabled {
 .stats-grid strong {
   display: block;
   font-size: clamp(1.45rem, min(3vw, 4dvh), 2.5rem);
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
 }
 
 .stats-grid span,
@@ -362,7 +364,7 @@ button:disabled {
   color: hsl(var(--muted-foreground));
   font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   margin: 0;
   text-transform: uppercase;
 }
@@ -370,13 +372,13 @@ button:disabled {
 .quiz-header h1,
 .question-panel h2 {
   font-family: var(--font-display);
-  line-height: 0.96;
+  line-height: 1.06;
   margin: 0;
 }
 
 .quiz-header h1 {
   font-size: clamp(2rem, min(5vw, 8dvh), 4.8rem);
-  letter-spacing: -0.035em;
+  letter-spacing: 0;
 }
 
 .quiz-metrics {
@@ -419,8 +421,8 @@ button:disabled {
 
 .question-panel h2 {
   font-size: var(--question-size, clamp(1.55rem, min(3.8vw, 6dvh), 3.6rem));
-  letter-spacing: -0.018em;
-  line-height: 1.04;
+  letter-spacing: 0;
+  line-height: 1.14;
   max-width: min(100%, 980px);
   text-wrap: pretty;
 }
@@ -470,7 +472,7 @@ button:disabled {
 .answer-option strong {
   display: block;
   font-size: clamp(0.95rem, min(1.6vw, 2.3dvh), 1.18rem);
-  line-height: 1.25;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
@@ -522,6 +524,10 @@ button:disabled {
   justify-content: space-between;
   font-weight: 700;
   padding: 1rem;
+}
+
+.quiz-footer.auto {
+  justify-content: flex-end;
 }
 
 .quiz-footer-left {
@@ -658,8 +664,8 @@ button:disabled {
 .upload-modal h2 {
   font-size: clamp(1.8rem, min(4vw, 5dvh), 3rem);
   font-weight: 800;
-  letter-spacing: -0.055em;
-  line-height: 1;
+  letter-spacing: 0;
+  line-height: 1.08;
   margin: 0.6rem 0 1rem;
 }
 

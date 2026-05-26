@@ -1,7 +1,6 @@
-import type { CSSProperties } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { type FinishReason, type OptionKey, type Question, type QuizMode } from '@/quiz';
+import { modes, type FinishReason, type OptionKey, type Question, type QuizMode } from '@/quiz';
 import { AppHeader } from './ModeSelectionPage';
 
 const resultCopy: Record<FinishReason, string> = {
@@ -38,53 +37,77 @@ export function ResultPage({
   score,
   selectedMode,
 }: ResultPageProps) {
-  const scoreLine = resultTotal ? `Score ${score}/${resultTotal}` : 'No answers yet';
+  const answeredCount = questions.filter((question) => answers[question.id]).length;
+  const skippedCount = Math.max(0, resultReachedCount - answeredCount);
+  const notReachedCount = Math.max(0, resultTotal - resultReachedCount);
+  const modeTitle = modes.find((mode) => mode.id === selectedMode)?.title ?? selectedMode;
+  const resultLabel = percentScore >= 85 ? 'Legendary run' : percentScore >= 60 ? 'Sharp showing' : 'Room to level up';
 
   return (
-    <main className="page-shell">
+    <main className="result-page app-page">
       <AppHeader active="Results" goHome={goModes} />
 
-      <section className="result-layout">
-        <div className="result-summary">
-          <p className="section-kicker">{resultCopy[finishReason]}</p>
-          <h1>{scoreLine}</h1>
-          <div className="result-ring" style={{ '--score': `${percentScore}%` } as CSSProperties}>
+      <section className="result-stage">
+        <article className="result-title-card" aria-label="Quiz results summary">
+          <div className="result-doodle-mark" aria-hidden="true">
             <span>{percentScore}%</span>
+          </div>
+          <p className="section-kicker">{resultCopy[finishReason]}</p>
+          <h1>{resultLabel}</h1>
+          <p className="result-score">
+            {score}/{resultTotal} correct in {fileName}
+          </p>
+          <div className="result-meta-grid" aria-label="Result highlights">
+            <span>
+              <strong>{modeTitle}</strong>
+              Mode
+            </span>
+            <span>
+              <strong>{answeredCount}</strong>
+              Attempted
+            </span>
+            <span>
+              <strong>{skippedCount + notReachedCount}</strong>
+              Skipped
+            </span>
           </div>
           <div className="result-actions">
             <Button onClick={restartQuiz} variant="solid">
               Try again
             </Button>
             <Button onClick={goModes} variant="ghost">
-              Change mode
+              Change setup
             </Button>
           </div>
-          <p className="result-meta">
-            {selectedMode} mode · {fileName}
-          </p>
-        </div>
+        </article>
 
-        <div className="review-list">
-          {questions.map((question, index) => {
-            const userAnswer = answers[question.id];
-            const isCorrect = userAnswer === question.answer;
-            const wasReached = index < resultReachedCount;
-            const wasSkipped = !userAnswer && wasReached;
-            const wasNotReached = !userAnswer && !wasReached;
-            const state = isCorrect ? 'correct' : userAnswer ? 'wrong' : 'skipped';
-            const answerCopy = getAnswerCopy(userAnswer, question.answer, wasSkipped);
+        <section className="review-panel" aria-labelledby="review-title">
+          <div className="review-heading">
+            <p className="section-kicker">Question review</p>
+            <h2 id="review-title">What happened out there</h2>
+          </div>
+          <div className="review-items">
+            {questions.map((question, index) => {
+              const userAnswer = answers[question.id];
+              const isCorrect = userAnswer === question.answer;
+              const wasReached = index < resultReachedCount;
+              const wasSkipped = !userAnswer && wasReached;
+              const wasNotReached = !userAnswer && !wasReached;
+              const state = isCorrect ? 'correct' : userAnswer ? 'wrong' : 'skipped';
+              const answerCopy = getAnswerCopy(userAnswer, question.answer, wasSkipped);
 
-            return (
-              <article className={cn('review-item', state, wasNotReached && 'not-reached')} key={question.id}>
-                <span>{index + 1}</span>
-                <div>
-                  <strong>{question.prompt}</strong>
-                  <p>{answerCopy}</p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+              return (
+                <article className={cn('review-item', state, wasNotReached && 'not-reached')} key={question.id}>
+                  <span>{index + 1}</span>
+                  <div>
+                    <strong>{question.prompt}</strong>
+                    <p>{answerCopy}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
       </section>
     </main>
   );

@@ -1,0 +1,31 @@
+import { makePreset, question } from '../builders';
+
+export default makePreset(
+  'geography',
+  'Geography',
+  'World',
+  'Capitals, landmarks, rivers, mountains, and maps.',
+  [
+    question('What is the capital of Japan?', ['Kyoto', 'Tokyo', 'Osaka', 'Nagoya'], 'B'),
+    question('Which continent is the Sahara Desert in?', ['Asia', 'Africa', 'Australia', 'South America'], 'B'),
+    question('What is the longest river in the world by common school convention?', ['Amazon', 'Nile', 'Yangtze', 'Mississippi'], 'B'),
+    question('Which country has the city of Barcelona?', ['Portugal', 'Spain', 'Italy', 'France'], 'B'),
+    question('Mount Everest lies in which mountain range?', ['Andes', 'Alps', 'Himalayas', 'Rockies'], 'C'),
+    question('Which ocean is the largest?', ['Atlantic', 'Indian', 'Pacific', 'Arctic'], 'C'),
+    question('What is the capital of Canada?', ['Toronto', 'Vancouver', 'Ottawa', 'Montreal'], 'C'),
+    question('Which country is shaped like a boot?', ['Greece', 'Italy', 'Chile', 'Norway'], 'B'),
+    question('The Great Barrier Reef is near which country?', ['Brazil', 'Australia', 'India', 'Mexico'], 'B'),
+    question('Which river flows through Paris?', ['Thames', 'Seine', 'Rhine', 'Danube'], 'B'),
+    question('What is the capital of Egypt?', ['Cairo', 'Alexandria', 'Luxor', 'Giza'], 'A'),
+    question('Which country has the most natural lakes?', ['Canada', 'India', 'Spain', 'Japan'], 'A'),
+    question('Which U.S. state is known as the Sunshine State?', ['California', 'Florida', 'Texas', 'Arizona'], 'B'),
+    question('Which desert covers much of Mongolia and northern China?', ['Gobi', 'Kalahari', 'Atacama', 'Mojave'], 'A'),
+    question('Which city is home to the Colosseum?', ['Athens', 'Rome', 'Istanbul', 'Madrid'], 'B'),
+    question('What is the capital of Brazil?', ['Rio de Janeiro', 'Sao Paulo', 'Brasilia', 'Salvador'], 'C'),
+    question('Which sea separates Europe and Africa near Italy?', ['Caribbean Sea', 'Mediterranean Sea', 'Baltic Sea', 'Black Sea'], 'B'),
+    question('Which country contains Machu Picchu?', ['Peru', 'Chile', 'Colombia', 'Bolivia'], 'A'),
+    question('Which is the smallest continent?', ['Europe', 'Australia', 'Antarctica', 'South America'], 'B'),
+    question('What is the capital of South Korea?', ['Busan', 'Seoul', 'Incheon', 'Daegu'], 'B'),
+  ],
+  5,
+);

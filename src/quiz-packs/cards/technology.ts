@@ -1,0 +1,31 @@
+import { makePreset, question } from '../builders';
+
+export default makePreset(
+  'technology',
+  'Technology',
+  'Digital',
+  'Computers, web basics, devices, and modern tech.',
+  [
+    question('What does CPU stand for?', ['Central Processing Unit', 'Computer Power Utility', 'Core Program Unit', 'Central Pixel Unit'], 'A'),
+    question('Which language is primarily used for styling web pages?', ['HTML', 'CSS', 'SQL', 'Python'], 'B'),
+    question('What does URL stand for?', ['Uniform Resource Locator', 'Universal Runtime Link', 'User Request Label', 'Unified Router List'], 'A'),
+    question('Which company created the iPhone?', ['Google', 'Apple', 'Samsung', 'Nokia'], 'B'),
+    question('What does RAM store?', ['Temporary working data', 'Printed pages', 'Battery charge', 'Screen brightness'], 'A'),
+    question('Which protocol is commonly used for secure websites?', ['FTP', 'HTTP', 'HTTPS', 'SMTP'], 'C'),
+    question('What is Git used for?', ['Image editing', 'Version control', 'Video streaming', 'Password cracking'], 'B'),
+    question('Which database language is used for queries?', ['CSS', 'SQL', 'SVG', 'Bash'], 'B'),
+    question('What does AI stand for?', ['Automated Input', 'Artificial Intelligence', 'Analog Interface', 'Applied Internet'], 'B'),
+    question('Which file extension often contains JavaScript?', ['.jpg', '.js', '.mp3', '.zip'], 'B'),
+    question('What does a browser do?', ['Runs websites', 'Prints circuits', 'Charges phones', 'Stores furniture'], 'A'),
+    question('Which company developed Android?', ['Microsoft', 'Google', 'Sony', 'IBM'], 'B'),
+    question('What is two-factor authentication used for?', ['Faster charging', 'Extra login security', 'Better graphics', 'File compression'], 'B'),
+    question('Which device routes internet traffic in a home network?', ['Router', 'Monitor', 'Keyboard', 'Printer'], 'A'),
+    question('What does HTML define?', ['Page structure', 'Database indexes', 'Battery health', 'Image resolution'], 'A'),
+    question('Which cloud term means renting computing resources over the internet?', ['Cloud computing', 'Packet painting', 'Cable casting', 'Data drying'], 'A'),
+    question('What is phishing?', ['A cyber scam', 'A graphics setting', 'A keyboard shortcut', 'A storage format'], 'A'),
+    question('Which unit is larger?', ['Kilobyte', 'Megabyte', 'Byte', 'Bit'], 'B'),
+    question('What is an API?', ['Application Programming Interface', 'Automatic Pixel Importer', 'Advanced Power Input', 'Audio Processing Icon'], 'A'),
+    question('Which tool is used to inspect web page elements in browsers?', ['Developer tools', 'Paint bucket', 'Disk cleanup', 'Task scheduler'], 'A'),
+  ],
+  6,
+);

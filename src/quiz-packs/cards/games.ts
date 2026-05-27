@@ -1,0 +1,31 @@
+import { makePreset, question } from '../builders';
+
+export default makePreset(
+  'games',
+  'Games',
+  'Play',
+  'Consoles, classics, characters, and gaming lore.',
+  [
+    question('Which company created the Mario franchise?', ['Sega', 'Nintendo', 'Sony', 'Valve'], 'B'),
+    question('In Minecraft, what material is needed to craft a Nether portal frame?', ['End Stone', 'Obsidian', 'Bedrock', 'Granite'], 'B'),
+    question('Which game features the character Master Chief?', ['Halo', 'Doom', 'Destiny', 'Mass Effect'], 'A'),
+    question('What is the main collectible creature type in Pokemon?', ['Digimon', 'Monsters', 'Pokemon', 'Yo-kai'], 'C'),
+    question('Which battle royale game is known for building mechanics?', ['Apex Legends', 'PUBG', 'Fortnite', 'Warzone'], 'C'),
+    question('In The Legend of Zelda, what is the hero usually named?', ['Link', 'Zelda', 'Ganon', 'Navi'], 'A'),
+    question('Which game is famous for the phrase "The cake is a lie"?', ['Portal', 'Half-Life', 'BioShock', 'Control'], 'A'),
+    question('Which studio created The Witcher 3?', ['Bethesda', 'CD Projekt Red', 'FromSoftware', 'BioWare'], 'B'),
+    question('What genre is Stardew Valley best known as?', ['Farming sim', 'Racing', 'Fighting', 'Horror'], 'A'),
+    question('Which game series includes Ryu and Chun-Li?', ['Tekken', 'Street Fighter', 'Mortal Kombat', 'Virtua Fighter'], 'B'),
+    question('What color is Sonic the Hedgehog?', ['Red', 'Blue', 'Green', 'Yellow'], 'B'),
+    question('Which game features the city of Rapture?', ['BioShock', 'Dishonored', 'Prey', 'Fallout'], 'A'),
+    question('In Among Us, players try to find which hidden role?', ['Builder', 'Impostor', 'Merchant', 'Pilot'], 'B'),
+    question('Which company makes the PlayStation console?', ['Microsoft', 'Sony', 'Nintendo', 'Atari'], 'B'),
+    question('Which game series is known for catching monsters in Pokeballs?', ['Persona', 'Pokemon', 'Monster Hunter', 'Dragon Quest'], 'B'),
+    question('Which indie game features a fallen child in the Underground?', ['Celeste', 'Hades', 'Undertale', 'Hollow Knight'], 'C'),
+    question('Which game has creepers that explode?', ['Terraria', 'Minecraft', 'Roblox', 'Valheim'], 'B'),
+    question('Which racing series uses blue shells?', ['Need for Speed', 'Forza', 'Mario Kart', 'Gran Turismo'], 'C'),
+    question('Which game popularized the battle pass model at massive scale?', ['Fortnite', 'Tetris', 'Skyrim', 'Portal 2'], 'A'),
+    question('Which game series features the Triforce?', ['Final Fantasy', 'Zelda', 'Kingdom Hearts', 'Metroid'], 'B'),
+  ],
+  2,
+);

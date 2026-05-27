@@ -1,0 +1,31 @@
+import { makePreset, question } from '../builders';
+
+export default makePreset(
+  'pop-culture',
+  'Pop Culture',
+  'Entertainment',
+  'Movies, music, TV, icons, and fandom staples.',
+  [
+    question('Who is known as the King of Pop?', ['Prince', 'Michael Jackson', 'Elvis Presley', 'Bruno Mars'], 'B'),
+    question('Which movie features the line "May the Force be with you"?', ['Star Wars', 'Avatar', 'The Matrix', 'Dune'], 'A'),
+    question('Which superhero is also known as the Dark Knight?', ['Iron Man', 'Batman', 'Superman', 'Spider-Man'], 'B'),
+    question('What fictional school does Harry Potter attend?', ['Hogwarts', 'Beauxbatons', 'Ilvermorny', 'Durmstrang'], 'A'),
+    question('Which TV show features the coffee shop Central Perk?', ['Friends', 'Seinfeld', 'The Office', 'How I Met Your Mother'], 'A'),
+    question('Which singer released the album 1989?', ['Adele', 'Taylor Swift', 'Billie Eilish', 'Rihanna'], 'B'),
+    question('Which franchise features lightsabers?', ['Star Trek', 'Star Wars', 'Blade Runner', 'Alien'], 'B'),
+    question('Who played Jack in Titanic?', ['Brad Pitt', 'Leonardo DiCaprio', 'Tom Cruise', 'Matt Damon'], 'B'),
+    question('Which animated film features Elsa?', ['Moana', 'Frozen', 'Brave', 'Tangled'], 'B'),
+    question('What is the name of the toy cowboy in Toy Story?', ['Buzz', 'Woody', 'Andy', 'Rex'], 'B'),
+    question('Which streaming series features Hawkins, Indiana?', ['Stranger Things', 'Wednesday', 'Dark', 'Loki'], 'A'),
+    question('Which band released Bohemian Rhapsody?', ['Queen', 'The Beatles', 'ABBA', 'Nirvana'], 'A'),
+    question('Which Marvel hero uses a hammer called Mjolnir?', ['Thor', 'Hulk', 'Hawkeye', 'Vision'], 'A'),
+    question('What color are the Simpsons usually drawn?', ['Blue', 'Yellow', 'Green', 'Pink'], 'B'),
+    question('Which movie franchise features Dominic Toretto?', ['John Wick', 'Fast & Furious', 'Mission: Impossible', 'Transformers'], 'B'),
+    question('Which artist is known for the song Bad Guy?', ['Lorde', 'Billie Eilish', 'Dua Lipa', 'Olivia Rodrigo'], 'B'),
+    question('Which fantasy series features the One Ring?', ['Harry Potter', 'The Lord of the Rings', 'Narnia', 'Percy Jackson'], 'B'),
+    question('Which character lives in a pineapple under the sea?', ['Patrick', 'SpongeBob', 'Squidward', 'Plankton'], 'B'),
+    question('Which film features the song My Heart Will Go On?', ['Titanic', 'Moulin Rouge!', 'La La Land', 'Frozen'], 'A'),
+    question('Which show is set at Dunder Mifflin?', ['Parks and Recreation', 'The Office', 'Brooklyn Nine-Nine', 'Community'], 'B'),
+  ],
+  4,
+);

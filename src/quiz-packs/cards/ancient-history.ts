@@ -1,0 +1,31 @@
+import { makePreset, question } from '../builders';
+
+export default makePreset(
+  'ancient-history',
+  'Ancient History',
+  'Civilizations',
+  'Empires, rulers, inventions, and old-world drama.',
+  [
+    question('Which river was central to Ancient Egyptian civilization?', ['Tigris', 'Nile', 'Indus', 'Danube'], 'B'),
+    question('Who was the first emperor of a unified China?', ['Qin Shi Huang', 'Han Wudi', 'Kublai Khan', 'Sun Tzu'], 'A'),
+    question('Which city-state is famous for its military society?', ['Athens', 'Corinth', 'Sparta', 'Thebes'], 'C'),
+    question('The Code of Hammurabi comes from which civilization?', ['Babylonian', 'Roman', 'Mayan', 'Persian'], 'A'),
+    question('Which empire built Persepolis?', ['Assyrian', 'Persian', 'Mauryan', 'Byzantine'], 'B'),
+    question('Who was the Macedonian king who conquered much of Persia?', ['Philip II', 'Alexander the Great', 'Leonidas', 'Ptolemy'], 'B'),
+    question('Which ancient people built Machu Picchu?', ['Aztec', 'Maya', 'Inca', 'Olmec'], 'C'),
+    question('What writing system used wedge-shaped marks on clay tablets?', ['Hieroglyphics', 'Cuneiform', 'Sanskrit', 'Linear B'], 'B'),
+    question('Which Roman leader was assassinated on the Ides of March?', ['Augustus', 'Julius Caesar', 'Nero', 'Trajan'], 'B'),
+    question('Which ancient Indian emperor promoted Buddhism after the Kalinga War?', ['Ashoka', 'Chandragupta I', 'Harsha', 'Akbar'], 'A'),
+    question('The Parthenon was dedicated to which goddess?', ['Hera', 'Athena', 'Artemis', 'Aphrodite'], 'B'),
+    question('Which sea connected many ancient Mediterranean trade routes?', ['Baltic Sea', 'Red Sea', 'Mediterranean Sea', 'Caspian Sea'], 'C'),
+    question('Who is known for the military treatise The Art of War?', ['Confucius', 'Sun Tzu', 'Laozi', 'Mencius'], 'B'),
+    question('Which civilization developed a famous early democracy?', ['Athens', 'Carthage', 'Babylon', 'Memphis'], 'A'),
+    question('The Rosetta Stone helped decode which script?', ['Runes', 'Hieroglyphics', 'Cuneiform', 'Phoenician'], 'B'),
+    question('Which empire was ruled from the city of Tenochtitlan?', ['Inca', 'Aztec', 'Minoan', 'Hittite'], 'B'),
+    question('Which Roman structure hosted gladiator games?', ['Pantheon', 'Colosseum', 'Forum', 'Aqueduct'], 'B'),
+    question('Which ancient trade route linked China with the Mediterranean world?', ['Amber Road', 'Silk Road', 'Royal Road', 'Tea Road'], 'B'),
+    question('Which civilization used oracle bones for divination?', ['Shang China', 'Gupta India', 'Old Kingdom Egypt', 'Classical Greece'], 'A'),
+    question('Which city was buried by the eruption of Mount Vesuvius in 79 CE?', ['Pompeii', 'Troy', 'Knossos', 'Ur'], 'A'),
+  ],
+  1,
+);

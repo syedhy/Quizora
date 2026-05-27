@@ -1,0 +1,31 @@
+import { makePreset, question } from '../builders';
+
+export default makePreset(
+  'science',
+  'Science',
+  'Discovery',
+  'Space, biology, chemistry, physics, and Earth science.',
+  [
+    question('What planet is known as the Red Planet?', ['Venus', 'Mars', 'Jupiter', 'Mercury'], 'B'),
+    question('What gas do plants absorb during photosynthesis?', ['Oxygen', 'Nitrogen', 'Carbon dioxide', 'Helium'], 'C'),
+    question('What is H2O commonly known as?', ['Salt', 'Water', 'Hydrogen peroxide', 'Ozone'], 'B'),
+    question('What force keeps planets in orbit around the Sun?', ['Magnetism', 'Gravity', 'Friction', 'Tension'], 'B'),
+    question('Which organ pumps blood through the body?', ['Liver', 'Heart', 'Lung', 'Kidney'], 'B'),
+    question('What particle has a negative electric charge?', ['Proton', 'Neutron', 'Electron', 'Photon'], 'C'),
+    question('What is the boiling point of water at sea level?', ['50 C', '75 C', '100 C', '150 C'], 'C'),
+    question('Which layer protects Earth from much ultraviolet radiation?', ['Troposphere', 'Ozone layer', 'Lithosphere', 'Core'], 'B'),
+    question('What is the chemical symbol for gold?', ['Go', 'Gd', 'Au', 'Ag'], 'C'),
+    question('Which scientist proposed the theory of general relativity?', ['Isaac Newton', 'Albert Einstein', 'Marie Curie', 'Niels Bohr'], 'B'),
+    question('What is the basic unit of life?', ['Atom', 'Cell', 'Organ', 'Tissue'], 'B'),
+    question('Which blood cells help fight infection?', ['Red blood cells', 'White blood cells', 'Platelets', 'Plasma'], 'B'),
+    question('What type of energy does a moving object have?', ['Thermal', 'Kinetic', 'Chemical', 'Elastic'], 'B'),
+    question('Which planet has the most prominent ring system?', ['Mars', 'Saturn', 'Earth', 'Venus'], 'B'),
+    question('What scale measures earthquake magnitude?', ['Beaufort', 'Richter', 'Celsius', 'pH'], 'B'),
+    question('Which vitamin is produced when skin is exposed to sunlight?', ['Vitamin A', 'Vitamin C', 'Vitamin D', 'Vitamin K'], 'C'),
+    question('What is the center of an atom called?', ['Shell', 'Nucleus', 'Membrane', 'Core sample'], 'B'),
+    question('What does DNA store?', ['Genetic information', 'Oxygen', 'Heat', 'Water'], 'A'),
+    question('Which process turns a liquid into gas?', ['Freezing', 'Condensation', 'Evaporation', 'Deposition'], 'C'),
+    question('Which animal group includes frogs and salamanders?', ['Reptiles', 'Amphibians', 'Mammals', 'Birds'], 'B'),
+  ],
+  3,
+);

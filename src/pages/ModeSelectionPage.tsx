@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   modes,
   percent,
@@ -23,10 +24,100 @@ export function AppHeader({ goHome }: AppHeaderProps) {
       <button className="brand-mark" onClick={goHome} type="button">
         Quizora
       </button>
-      <div className="header-tabs">
+      <div className="header-actions">
+        <ThemeToggleButton />
         <a href="mailto:syedhyderalihamdani@gmail.com?subject=Quizora%20Feedback">Reach Us</a>
       </div>
     </header>
+  );
+}
+
+type ThemeName = 'light' | 'dark';
+
+const themeStorageKey = 'quizora-theme';
+
+function getInitialTheme(): ThemeName {
+  if (typeof window === 'undefined') {
+    return 'light';
+  }
+
+  const storedTheme = getStoredTheme();
+  if (storedTheme === 'dark' || storedTheme === 'light') {
+    return storedTheme;
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme: ThemeName) {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.style.colorScheme = theme;
+  setStoredTheme(theme);
+}
+
+function getStoredTheme() {
+  try {
+    return window.localStorage.getItem(themeStorageKey);
+  } catch {
+    return null;
+  }
+}
+
+function setStoredTheme(theme: ThemeName) {
+  try {
+    window.localStorage.setItem(themeStorageKey, theme);
+  } catch {
+    // Dark mode still works for this session if storage is unavailable.
+  }
+}
+
+function ThemeToggleButton() {
+  const [theme, setTheme] = React.useState<ThemeName>(() => getInitialTheme());
+  const isDark = theme === 'dark';
+
+  React.useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  return (
+    <button
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-pressed={isDark}
+      className={cn('theme-toggle-button', isDark && 'is-dark')}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      title={isDark ? 'Light mode' : 'Dark mode'}
+      type="button"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        fill="currentColor"
+        strokeLinecap="round"
+        viewBox="0 0 32 32"
+      >
+        <clipPath id="quizora-theme-btn">
+          <path
+            className="theme-toggle-clip-path"
+            d="M0-5h30a1 1 0 0 0 9 13v24H0Z"
+          />
+        </clipPath>
+
+        <g clipPath="url(#quizora-theme-btn)">
+          <circle className="theme-toggle-sun" cx="16" cy="16" r="8" />
+
+          <g className="theme-toggle-sun-rays" stroke="currentColor" strokeWidth="1.5">
+            <path d="M16 5.5v-4" />
+            <path d="M16 30.5v-4" />
+            <path d="M1.5 16h4" />
+            <path d="M26.5 16h4" />
+            <path d="m23.4 8.6 2.8-2.8" />
+            <path d="m5.7 26.3 2.9-2.9" />
+            <path d="m5.8 5.8 2.8 2.8" />
+            <path d="m23.4 23.4 2.9 2.9" />
+          </g>
+        </g>
+      </svg>
+    </button>
   );
 }
 

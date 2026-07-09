@@ -53,8 +53,14 @@ export function QuizPage({
   const container = React.useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    gsap.from('.question-panel h2', { y: -20, opacity: 0, duration: 0.5, ease: 'power3.out' });
-    gsap.from('.answer-option', { y: 20, opacity: 0, stagger: 0.05, duration: 0.5, ease: 'back.out(1.5)', delay: 0.1 });
+    gsap.fromTo('.question-panel h2', 
+      { y: -30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }
+    );
+    gsap.fromTo('.answer-option', 
+      { y: 30, opacity: 0, scale: 0.95 },
+      { y: 0, opacity: 1, scale: 1, stagger: 0.08, duration: 0.6, ease: 'back.out(1.5)', delay: 0.1 }
+    );
   }, { scope: container, dependencies: [currentQuestion.id] });
 
   return (

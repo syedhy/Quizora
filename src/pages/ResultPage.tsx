@@ -49,7 +49,10 @@ export function ResultPage({
   const container = React.useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    gsap.from('.review-item', { x: 20, opacity: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out', delay: 0.2 });
+    gsap.fromTo('.review-item', 
+      { x: 30, opacity: 0 },
+      { x: 0, opacity: 1, stagger: 0.08, duration: 0.6, ease: 'power2.out', delay: 0.2 }
+    );
   }, { scope: container });
 
   return (

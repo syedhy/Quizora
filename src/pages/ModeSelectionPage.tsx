@@ -134,11 +134,30 @@ export function SetupPage({ continueToLibrary, settings, stats, updateSettings }
   const container = React.useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    gsap.from('.setup-copy > *', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' });
-    gsap.from('.choice-card', { y: 20, opacity: 0, stagger: 0.05, duration: 0.5, ease: 'back.out(1.5)', delay: 0.15 });
-    gsap.from('.control-section:not(:first-child)', { opacity: 0, duration: 0.5, delay: 0.3 });
-    gsap.from('.setup-footer', { y: 10, opacity: 0, duration: 0.5, delay: 0.4 });
+    gsap.fromTo('.setup-copy > *', 
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power3.out' }
+    );
+    gsap.fromTo('.choice-card', 
+      { y: 40, opacity: 0, scale: 0.95 },
+      { y: 0, opacity: 1, scale: 1, stagger: 0.1, duration: 0.6, ease: 'back.out(1.5)', delay: 0.1 }
+    );
+    gsap.fromTo('.control-section:not(:first-child)', 
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, delay: 0.3 }
+    );
+    gsap.fromTo('.setup-footer', 
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, delay: 0.4 }
+    );
   }, { scope: container });
+
+  useGSAP(() => {
+    gsap.fromTo('.setting-group', 
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, ease: 'power2.out' }
+    );
+  }, { scope: container, dependencies: [settings.mode] });
 
   function updateMode(mode: QuizMode) {
     updateSettings({ ...settings, mode });
@@ -265,6 +284,74 @@ type QuizLibraryPageProps = {
   uploadError: string;
 };
 
+function getPresetIcon(id: string) {
+  switch (id) {
+    case 'ancient-history':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 22h14" />
+          <path d="M5 2h14" />
+          <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
+          <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
+        </svg>
+      );
+    case 'games':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="6" x2="10" y1="12" y2="12" />
+          <line x1="8" x2="8" y1="10" y2="14" />
+          <line x1="15" x2="15.01" y1="13" y2="13" />
+          <line x1="18" x2="18.01" y1="11" y2="11" />
+          <rect width="20" height="12" x="2" y="6" rx="2" />
+        </svg>
+      );
+    case 'geography':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" x2="22" y1="12" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      );
+    case 'pokemon':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <circle cx="12" cy="12" r="3" />
+          <line x1="2" y1="12" x2="9" y2="12" />
+          <line x1="15" y1="12" x2="22" y2="12" />
+        </svg>
+      );
+    case 'pop-culture':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+      );
+    case 'science':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10 2v7.31" />
+          <path d="M14 9.3V1.99" />
+          <path d="M8.5 2h7" />
+          <path d="M14 9.3a6.5 6.5 0 1 1-4 0" />
+          <path d="M5.52 16h12.96" />
+        </svg>
+      );
+    case 'technology':
+    default:
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+      );
+  }
+}
+
 export function QuizLibraryPage({
   goBack,
   handleFileUpload,
@@ -276,8 +363,18 @@ export function QuizLibraryPage({
   const container = React.useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    gsap.from('.library-heading > *', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' });
-    gsap.from('.preset-card', { y: 30, opacity: 0, stagger: 0.05, duration: 0.6, ease: 'back.out(1.5)', delay: 0.15 });
+    gsap.fromTo('.library-heading > *', 
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power3.out' }
+    );
+    gsap.fromTo('.preset-card', 
+      { y: 40, opacity: 0, scale: 0.95 },
+      { y: 0, opacity: 1, scale: 1, stagger: 0.1, duration: 0.6, ease: 'back.out(1.5)', delay: 0.15 }
+    );
+    gsap.fromTo('.preset-graphic svg',
+      { scale: 0.5, opacity: 0, rotate: -15 },
+      { scale: 1, opacity: 1, rotate: 0, duration: 0.8, stagger: 0.05, ease: 'elastic.out(1, 0.5)', delay: 0.3 }
+    );
   }, { scope: container });
 
   return (
@@ -295,14 +392,22 @@ export function QuizLibraryPage({
 
         <div className="preset-grid">
           <button className="preset-card upload-card" onClick={() => setUploadHelpOpen(true)} type="button">
-            <img alt="" className="preset-image" src="/quiz-cards/upload.jpeg" />
+            <div className="preset-graphic upload-graphic">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" x2="12" y1="3" y2="15"/>
+              </svg>
+            </div>
             <strong>Load your own quiz</strong>
             <small>Question/A/B/C/D text format</small>
           </button>
 
           {quizPresets.map((preset) => (
             <button className="preset-card" key={preset.id} onClick={() => startPreset(preset)} type="button">
-              <img alt="" className="preset-image" src={quizCardImagePath(preset.id)} />
+              <div className="preset-graphic">
+                {getPresetIcon(preset.id)}
+              </div>
               <strong>{preset.title}</strong>
               <small>{preset.questions.length} bundled questions</small>
             </button>
@@ -323,10 +428,6 @@ export function QuizLibraryPage({
       ) : null}
     </main>
   );
-}
-
-function quizCardImagePath(presetId: string) {
-  return `/quiz-cards/${presetId}.jpeg`;
 }
 
 type UploadFormatModalProps = {

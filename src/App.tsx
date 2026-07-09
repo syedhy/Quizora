@@ -52,13 +52,6 @@ function App() {
       '/assistant/wrong/wrong2.jpeg',
       '/assistant/wrong/wrong3.jpeg',
       '/assistant/wrong/wrong4.jpeg',
-      '/quiz-cards/frontend.jpeg',
-      '/quiz-cards/react.jpeg',
-      '/quiz-cards/javascript.jpeg',
-      '/quiz-cards/css.jpeg',
-      '/quiz-cards/html.jpeg',
-      '/quiz-cards/webdev.jpeg',
-      '/quiz-cards/upload.jpeg',
     ];
     imagesToPreload.forEach((src) => {
       const img = new Image();

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -129,6 +131,15 @@ type SetupPageProps = {
 };
 
 export function SetupPage({ continueToLibrary, settings, stats, updateSettings }: SetupPageProps) {
+  const container = React.useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.setup-copy > *', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' });
+    gsap.from('.choice-card', { y: 20, opacity: 0, stagger: 0.05, duration: 0.5, ease: 'back.out(1.5)', delay: 0.15 });
+    gsap.from('.control-section:not(:first-child)', { opacity: 0, duration: 0.5, delay: 0.3 });
+    gsap.from('.setup-footer', { y: 10, opacity: 0, duration: 0.5, delay: 0.4 });
+  }, { scope: container });
+
   function updateMode(mode: QuizMode) {
     updateSettings({ ...settings, mode });
   }
@@ -138,7 +149,7 @@ export function SetupPage({ continueToLibrary, settings, stats, updateSettings }
   }
 
   return (
-    <main className="page-shell app-page">
+    <main ref={container} className="page-shell app-page">
       <AppHeader goHome={() => undefined} />
 
       <section className="setup-layout">
@@ -262,9 +273,15 @@ export function QuizLibraryPage({
   uploadError,
 }: QuizLibraryPageProps) {
   const [uploadHelpOpen, setUploadHelpOpen] = React.useState(false);
+  const container = React.useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.library-heading > *', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' });
+    gsap.from('.preset-card', { y: 30, opacity: 0, stagger: 0.05, duration: 0.6, ease: 'back.out(1.5)', delay: 0.15 });
+  }, { scope: container });
 
   return (
-    <main className="page-shell app-page">
+    <main ref={container} className="page-shell app-page">
       <AppHeader goHome={goBack} />
 
       <section className="library-layout">

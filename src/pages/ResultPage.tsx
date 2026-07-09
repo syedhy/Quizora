@@ -1,3 +1,6 @@
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card';
 import { cn } from '@/lib/utils';
@@ -43,9 +46,14 @@ export function ResultPage({
   const notReachedCount = Math.max(0, resultTotal - resultReachedCount);
   const modeTitle = modes.find((mode) => mode.id === selectedMode)?.title ?? selectedMode;
   const resultLabel = percentScore >= 85 ? 'Legendary run' : percentScore >= 60 ? 'Sharp showing' : 'Room to level up';
+  const container = React.useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.review-item', { x: 20, opacity: 0, stagger: 0.05, duration: 0.5, ease: 'power2.out', delay: 0.2 });
+  }, { scope: container });
 
   return (
-    <main className="result-page app-page">
+    <main ref={container} className="result-page app-page">
       <AppHeader goHome={goModes} />
 
       <section className="result-stage">

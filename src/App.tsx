@@ -41,6 +41,31 @@ function App() {
     window.scrollTo(0, 0);
   }, [currentIndex, screen]);
 
+  // Preload images for snappiness
+  React.useEffect(() => {
+    const imagesToPreload = [
+      '/assistant/right/right1.jpeg',
+      '/assistant/right/right2.jpeg',
+      '/assistant/right/right3.jpeg',
+      '/assistant/right/right4.jpeg',
+      '/assistant/wrong/wrong1.jpeg',
+      '/assistant/wrong/wrong2.jpeg',
+      '/assistant/wrong/wrong3.jpeg',
+      '/assistant/wrong/wrong4.jpeg',
+      '/quiz-cards/frontend.jpeg',
+      '/quiz-cards/react.jpeg',
+      '/quiz-cards/javascript.jpeg',
+      '/quiz-cards/css.jpeg',
+      '/quiz-cards/html.jpeg',
+      '/quiz-cards/webdev.jpeg',
+      '/quiz-cards/upload.jpeg',
+    ];
+    imagesToPreload.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   const currentQuestion = questions[currentIndex];
   const activeMode = modes.find((mode) => mode.id === settings.mode) ?? modes[0];
   const score = React.useMemo(() => countCorrect(questions, answers), [answers, questions]);

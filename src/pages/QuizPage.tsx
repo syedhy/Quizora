@@ -1,5 +1,7 @@
 import * as React from 'react';
 import type { CSSProperties } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { type OptionKey, type Question, type QuizSettings, modes, questionFontSize } from '@/quiz';
@@ -48,9 +50,15 @@ export function QuizPage({
   const isClassicMode = settings.mode === 'classic';
   const isCorrect = selectedAnswer === currentQuestion.answer;
   const questionSize = questionFontSize(currentQuestion.prompt);
+  const container = React.useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.question-panel h2', { y: -20, opacity: 0, duration: 0.5, ease: 'power3.out' });
+    gsap.from('.answer-option', { y: 20, opacity: 0, stagger: 0.05, duration: 0.5, ease: 'back.out(1.5)', delay: 0.1 });
+  }, { scope: container, dependencies: [currentQuestion.id] });
 
   return (
-    <main className="quiz-page">
+    <main ref={container} className="quiz-page">
       <div className="quiz-frame">
         <header className="quiz-header">
           <div>
@@ -174,6 +182,7 @@ const wrongAssistantImages = [
 function CatAssistant({ currentIndex, isAnswered, isCorrect, mode, questionId, sourceTotal, usedQuestionCount }: CatAssistantProps) {
   const message = getAssistantMessage(currentIndex, isAnswered, isCorrect, mode, sourceTotal, usedQuestionCount);
   const [assistantImage, setAssistantImage] = React.useState(() => randomAssistantImage(rightAssistantImages));
+  const container = React.useRef<HTMLElement>(null);
 
   React.useEffect(() => {
     if (!isAnswered) {
@@ -184,8 +193,17 @@ function CatAssistant({ currentIndex, isAnswered, isCorrect, mode, questionId, s
     setAssistantImage((currentImage) => randomAssistantImage(imagePool, currentImage));
   }, [isAnswered, isCorrect, questionId]);
 
+  useGSAP(() => {
+    if (message) {
+      gsap.fromTo('.cat-bubble', 
+        { scale: 0.8, opacity: 0, y: 10 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.5)' }
+      );
+    }
+  }, { scope: container, dependencies: [message] });
+
   return (
-    <aside className={cn('cat-assistant', message ? 'has-bubble' : 'quiet', isAnswered && (isCorrect ? 'happy' : 'spicy'))} aria-live="polite">
+    <aside ref={container} className={cn('cat-assistant', message ? 'has-bubble' : 'quiet', isAnswered && (isCorrect ? 'happy' : 'spicy'))} aria-live="polite">
       <img alt="" className="cat-avatar" src={assistantImage} />
       {message ? (
         <div className="cat-bubble">

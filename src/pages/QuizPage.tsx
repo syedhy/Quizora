@@ -22,6 +22,7 @@ type QuizPageProps = {
   score: number;
   settings: QuizSettings;
   sourceTitle: string;
+  rotationInfo?: string;
   sourceTotal: number;
   timeLeft: number;
 };
@@ -39,6 +40,7 @@ export function QuizPage({
   livesLeft,
   progress,
   questionCount,
+  rotationInfo,
   score,
   settings,
   sourceTitle,
@@ -69,10 +71,11 @@ export function QuizPage({
         <header className="quiz-header">
           <div>
             <button className="back-button" onClick={goBack} type="button">
-              Library
+              ← Library
             </button>
             <p>
               {sourceTitle} · {activeMode.title} mode
+              {rotationInfo ? ` · ${rotationInfo}` : ''}
             </p>
             <h1>Question {currentIndex + 1}</h1>
           </div>
@@ -146,17 +149,17 @@ export function QuizPage({
             </Button>
           </div>
         )}
-
-        <CatAssistant
-          currentIndex={currentIndex}
-          isAnswered={isAnswered}
-          isCorrect={isCorrect}
-          mode={settings.mode}
-          questionId={currentQuestion.id}
-          sourceTotal={sourceTotal}
-          usedQuestionCount={questionCount}
-        />
       </div>
+
+      <CatAssistant
+        currentIndex={currentIndex}
+        isAnswered={isAnswered}
+        isCorrect={isCorrect}
+        mode={settings.mode}
+        questionId={currentQuestion.id}
+        sourceTotal={sourceTotal}
+        usedQuestionCount={questionCount}
+      />
     </main>
   );
 }

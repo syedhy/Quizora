@@ -5,15 +5,19 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
   modes,
+  parseQuestions,
   percent,
   questionCountOptions,
   quizPresets,
   survivalLifeOptions,
   timedSecondOptions,
+  type OptionKey,
+  type Question,
   type QuizMode,
   type QuizPreset,
   type QuizSettings,
   type QuizStats,
+  type SavedQuiz,
 } from '@/quiz';
 
 type AppHeaderProps = {
@@ -278,9 +282,13 @@ function StatsStrip({ stats }: StatsStripProps) {
 
 type QuizLibraryPageProps = {
   goBack: () => void;
-  handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDeleteSavedQuiz: (id: string) => void;
+  onResetRotation: (id: string) => void;
+  onStartCustomQuiz: (questions: Question[], title: string, saveToLibrary: boolean) => void;
+  savedQuizzes: SavedQuiz[];
   selectedQuestionCount: number;
   startPreset: (preset: QuizPreset) => void;
+  startSavedQuiz: (quiz: SavedQuiz) => void;
   uploadError: string;
 };
 
@@ -354,12 +362,16 @@ function getPresetIcon(id: string) {
 
 export function QuizLibraryPage({
   goBack,
-  handleFileUpload,
+  onDeleteSavedQuiz,
+  onResetRotation,
+  onStartCustomQuiz,
+  savedQuizzes,
   selectedQuestionCount,
   startPreset,
+  startSavedQuiz,
   uploadError,
 }: QuizLibraryPageProps) {
-  const [uploadHelpOpen, setUploadHelpOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const container = React.useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -369,7 +381,7 @@ export function QuizLibraryPage({
     );
     gsap.fromTo('.preset-card', 
       { y: 40, opacity: 0, scale: 0.95 },
-      { y: 0, opacity: 1, scale: 1, stagger: 0.1, duration: 0.6, ease: 'back.out(1.5)', delay: 0.15 }
+      { y: 0, opacity: 1, scale: 1, stagger: 0.08, duration: 0.6, ease: 'back.out(1.5)', delay: 0.15 }
     );
     gsap.fromTo('.preset-graphic svg',
       { scale: 0.5, opacity: 0, rotate: -15 },
@@ -387,20 +399,119 @@ export function QuizLibraryPage({
             <p className="section-kicker">Quiz library</p>
             <h1>Choose what this run is about.</h1>
           </div>
-          <p>Each run shuffles the source and loads up to {selectedQuestionCount} questions.</p>
+          <p>Each run loads up to {selectedQuestionCount} questions. Saved quizzes track rotation without repeats.</p>
+        </div>
+
+        {savedQuizzes.length > 0 ? (
+          <div className="saved-quizzes-container">
+            <div className="saved-quizzes-header">
+              <div>
+                <span className="section-kicker">Saved Quizzes ({savedQuizzes.length})</span>
+                <h2>Rotation Quizzes</h2>
+              </div>
+              <p className="saved-subtext">Won't repeat questions until every question in the quiz has been done.</p>
+            </div>
+
+            <div className="preset-grid saved-preset-grid">
+              {savedQuizzes.map((quiz) => {
+                const seenCount = quiz.seenQuestionIds?.length ?? 0;
+                const totalCount = quiz.questions.length;
+                const isFullRotation = seenCount >= totalCount;
+                const progressPct = totalCount ? Math.round((seenCount / totalCount) * 100) : 0;
+
+                return (
+                  <div className="preset-card saved-card" key={quiz.id}>
+                    <div className="preset-graphic saved-graphic">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="10" y1="10" x2="14" y2="10" />
+                      </svg>
+                    </div>
+
+                    <div className="saved-meta">
+                      <strong>{quiz.title}</strong>
+                      <small>{totalCount} total questions</small>
+                    </div>
+
+                    <div className="rotation-pill" title={`${seenCount} of ${totalCount} questions done in this rotation`}>
+                      <div className="rotation-pill-text">
+                        <span>{isFullRotation ? '✅ Cycle ready' : `🔄 ${seenCount}/${totalCount} seen`}</span>
+                        <span className="rotation-pct">{progressPct}%</span>
+                      </div>
+                      <div className="rotation-bar-bg">
+                        <div className="rotation-bar-fill" style={{ width: `${progressPct}%` }} />
+                      </div>
+                    </div>
+
+                    <div className="saved-card-footer">
+                      <Button
+                        className="saved-play-button"
+                        onClick={() => startSavedQuiz(quiz)}
+                        variant="solid"
+                      >
+                        Play run
+                      </Button>
+                      <div className="saved-card-actions">
+                        <button
+                          className="action-icon-button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onResetRotation(quiz.id);
+                          }}
+                          title="Restart rotation from 0"
+                          type="button"
+                          aria-label="Reset rotation"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                            <path d="M3 3v5h5" />
+                          </svg>
+                        </button>
+                        <button
+                          className="action-icon-button is-danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm(`Delete "${quiz.title}" from saved quizzes?`)) {
+                              onDeleteSavedQuiz(quiz.id);
+                            }
+                          }}
+                          title="Delete saved quiz"
+                          type="button"
+                          aria-label="Delete quiz"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 6h18" />
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
+        <div className="presets-section-heading">
+          <p className="section-kicker">Presets & Custom</p>
+          <h2>Standard library</h2>
         </div>
 
         <div className="preset-grid">
-          <button className="preset-card upload-card" onClick={() => setUploadHelpOpen(true)} type="button">
+          <button className="preset-card upload-card" onClick={() => setModalOpen(true)} type="button">
             <div className="preset-graphic upload-graphic">
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" x2="12" y1="3" y2="15"/>
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                <line x1="12" y1="11" x2="12" y2="17"/>
+                <line x1="9" y1="14" x2="15" y2="14"/>
               </svg>
             </div>
-            <strong>Load your own quiz</strong>
-            <small>Question/A/B/C/D text format</small>
+            <strong>Add your own quiz</strong>
+            <small>Direct paste or file upload</small>
           </button>
 
           {quizPresets.map((preset) => (
@@ -417,12 +528,12 @@ export function QuizLibraryPage({
         {uploadError ? <p className="upload-error">{uploadError}</p> : null}
       </section>
 
-      {uploadHelpOpen ? (
-        <UploadFormatModal
-          close={() => setUploadHelpOpen(false)}
-          handleFileUpload={(event) => {
-            handleFileUpload(event);
-            setUploadHelpOpen(false);
+      {modalOpen ? (
+        <AddCustomQuizModal
+          close={() => setModalOpen(false)}
+          onStartCustomQuiz={(questions, title, saveToLibrary) => {
+            onStartCustomQuiz(questions, title, saveToLibrary);
+            setModalOpen(false);
           }}
         />
       ) : null}
@@ -430,31 +541,209 @@ export function QuizLibraryPage({
   );
 }
 
-type UploadFormatModalProps = {
+const sampleQuestionsText = `Question: Which planet in our Solar System is known as the Red Planet?
+A) Venus
+B) Mars
+C) Jupiter
+D) Saturn
+Answer: B
+
+Question: What is the primary gas found in Earth's atmosphere?
+A) Oxygen
+B) Nitrogen
+C) Carbon Dioxide
+D) Argon
+Answer: B
+
+Question: Which element has the chemical symbol 'Au'?
+A) Silver
+B) Gold
+C) Aluminum
+D) Copper
+Answer: B`;
+
+type AddCustomQuizModalProps = {
   close: () => void;
-  handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onStartCustomQuiz: (questions: Question[], title: string, saveToLibrary: boolean) => void;
 };
 
-function UploadFormatModal({ close, handleFileUpload }: UploadFormatModalProps) {
+function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProps) {
+  const [quizTitle, setQuizTitle] = React.useState('');
+  const [pasteText, setPasteText] = React.useState('');
+  const [saveQuizOption, setSaveQuizOption] = React.useState(true);
+  const [parseError, setParseError] = React.useState('');
+
+  async function handlePasteFromClipboard() {
+    try {
+      if (!navigator.clipboard?.readText) {
+        setParseError('Clipboard permission not supported. Paste directly using Ctrl+V or Cmd+V.');
+        return;
+      }
+      const clipText = await navigator.clipboard.readText();
+      if (!clipText.trim()) {
+        setParseError('Clipboard is currently empty.');
+        return;
+      }
+      setPasteText(clipText);
+      setParseError('');
+    } catch {
+      setParseError('Could not read clipboard. Please paste directly into the box.');
+    }
+  }
+
+  function handleFileLoaded(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const content = String(reader.result || '');
+      setPasteText(content);
+      if (!quizTitle.trim()) {
+        setQuizTitle(file.name.replace(/\.[^.]+$/, '') || file.name);
+      }
+      setParseError('');
+    };
+    reader.onerror = () => setParseError('Could not read selected file.');
+    reader.readAsText(file);
+  }
+
+  function handleStart() {
+    const trimmed = pasteText.trim();
+    if (!trimmed) {
+      setParseError('Please paste your questions into the box before starting.');
+      return;
+    }
+
+    try {
+      const parsed = parseQuestions(trimmed);
+      const title = quizTitle.trim() || 'Custom Quiz';
+      onStartCustomQuiz(parsed, title, saveQuizOption);
+    } catch (err) {
+      setParseError(err instanceof Error ? err.message : 'Invalid question format.');
+    }
+  }
+
   return (
-    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="upload-format-title">
-      <section className="upload-modal">
-        <button className="modal-close" onClick={close} type="button" aria-label="Close upload format dialog">
+    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="custom-quiz-modal-title">
+      <section className="upload-modal custom-quiz-modal">
+        <button className="modal-close" onClick={close} type="button" aria-label="Close dialog">
           Close
         </button>
-        <p className="section-kicker">Txt format</p>
-        <h2 id="upload-format-title">Format each question like this.</h2>
-        <pre>{`Question: Your question here?
-A) First option
-B) Second option
-C) Third option
-D) Fourth option
-Answer: B`}</pre>
-        <p>Keep one blank line between question blocks. Answers must use A, B, C, or D.</p>
-        <label className="file-chip modal-upload">
-          <input className="sr-only" type="file" accept=".txt,text/plain" onChange={handleFileUpload} />
-          Choose txt file
-        </label>
+
+        <p className="section-kicker">Custom Quiz</p>
+        <h2 id="custom-quiz-modal-title">Paste your quiz & play</h2>
+        <p className="modal-lead">
+          Paste your questions directly below to start immediately. Save to library to rotate questions without repeats.
+        </p>
+
+        <div className="custom-quiz-form">
+          <div className="modal-field">
+            <label htmlFor="custom-quiz-title">Quiz title (optional)</label>
+            <input
+              id="custom-quiz-title"
+              className="modal-input"
+              type="text"
+              placeholder="e.g. Science Revision, Trivia Night"
+              value={quizTitle}
+              onChange={(e) => setQuizTitle(e.target.value)}
+            />
+          </div>
+
+          <div className="modal-field">
+            <div className="modal-field-header">
+              <label htmlFor="custom-quiz-text">Quiz Questions</label>
+              <div className="modal-quick-actions">
+                <button
+                  type="button"
+                  className="quick-action-link"
+                  onClick={handlePasteFromClipboard}
+                  title="Paste from system clipboard"
+                >
+                  📋 Paste Clipboard
+                </button>
+                <button
+                  type="button"
+                  className="quick-action-link"
+                  onClick={() => {
+                    setPasteText(sampleQuestionsText);
+                    if (!quizTitle) setQuizTitle('Sample Science Quiz');
+                    setParseError('');
+                  }}
+                  title="Insert sample questions"
+                >
+                  Insert Sample
+                </button>
+                {pasteText ? (
+                  <button
+                    type="button"
+                    className="quick-action-link"
+                    onClick={() => {
+                      setPasteText('');
+                      setParseError('');
+                    }}
+                  >
+                    Clear
+                  </button>
+                ) : null}
+              </div>
+            </div>
+
+            <textarea
+              id="custom-quiz-text"
+              className="modal-textarea"
+              rows={8}
+              placeholder={`Question: What is the capital of France?\nA) London\nB) Paris\nC) Berlin\nD) Rome\nAnswer: B`}
+              value={pasteText}
+              onChange={(e) => {
+                setPasteText(e.target.value);
+                if (parseError) setParseError('');
+              }}
+            />
+          </div>
+
+          <div className="modal-options-row">
+            <label className="save-checkbox-label">
+              <input
+                type="checkbox"
+                checked={saveQuizOption}
+                onChange={(e) => setSaveQuizOption(e.target.checked)}
+              />
+              <span>Save to library (tracks question rotation without repeating)</span>
+            </label>
+
+            <label className="modal-file-link">
+              <input
+                className="sr-only"
+                type="file"
+                accept=".txt,text/plain"
+                onChange={handleFileLoaded}
+              />
+              📁 Or import .txt file
+            </label>
+          </div>
+
+          {parseError ? (
+            <div className="upload-error modal-error" role="alert">
+              {parseError}
+            </div>
+          ) : null}
+
+          <div className="modal-actions-footer">
+            <Button onClick={close} variant="ghost" type="button">
+              Cancel
+            </Button>
+            <Button
+              disabled={!pasteText.trim()}
+              onClick={handleStart}
+              variant="solid"
+              type="button"
+            >
+              Start quiz now
+            </Button>
+          </div>
+        </div>
       </section>
     </div>
   );

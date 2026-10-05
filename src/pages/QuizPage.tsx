@@ -22,7 +22,6 @@ type QuizPageProps = {
   score: number;
   settings: QuizSettings;
   sourceTitle: string;
-  rotationInfo?: string;
   sourceTotal: number;
   timeLeft: number;
 };
@@ -40,7 +39,6 @@ export function QuizPage({
   livesLeft,
   progress,
   questionCount,
-  rotationInfo,
   score,
   settings,
   sourceTitle,
@@ -75,7 +73,6 @@ export function QuizPage({
             </button>
             <p>
               {sourceTitle} · {activeMode.title} mode
-              {rotationInfo ? ` · ${rotationInfo}` : ''}
             </p>
             <h1>Question {currentIndex + 1}</h1>
           </div>

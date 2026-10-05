@@ -17,7 +17,6 @@ import {
   type QuizPreset,
   type QuizSettings,
   type QuizStats,
-  type SavedQuiz,
 } from '@/quiz';
 
 type AppHeaderProps = {
@@ -282,13 +281,9 @@ function StatsStrip({ stats }: StatsStripProps) {
 
 type QuizLibraryPageProps = {
   goBack: () => void;
-  onDeleteSavedQuiz: (id: string) => void;
-  onResetRotation: (id: string) => void;
-  onStartCustomQuiz: (questions: Question[], title: string, saveToLibrary: boolean) => void;
-  savedQuizzes: SavedQuiz[];
+  onStartCustomQuiz: (questions: Question[], title: string) => void;
   selectedQuestionCount: number;
   startPreset: (preset: QuizPreset) => void;
-  startSavedQuiz: (quiz: SavedQuiz) => void;
   uploadError: string;
 };
 
@@ -362,13 +357,9 @@ function getPresetIcon(id: string) {
 
 export function QuizLibraryPage({
   goBack,
-  onDeleteSavedQuiz,
-  onResetRotation,
   onStartCustomQuiz,
-  savedQuizzes,
   selectedQuestionCount,
   startPreset,
-  startSavedQuiz,
   uploadError,
 }: QuizLibraryPageProps) {
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -399,105 +390,7 @@ export function QuizLibraryPage({
             <p className="section-kicker">Quiz library</p>
             <h1>Choose what this run is about.</h1>
           </div>
-          <p>Each run loads up to {selectedQuestionCount} questions. Saved quizzes track rotation without repeats.</p>
-        </div>
-
-        {savedQuizzes.length > 0 ? (
-          <div className="saved-quizzes-container">
-            <div className="saved-quizzes-header">
-              <div>
-                <span className="section-kicker">Saved Quizzes ({savedQuizzes.length})</span>
-                <h2>Rotation Quizzes</h2>
-              </div>
-              <p className="saved-subtext">Won't repeat questions until every question in the quiz has been done.</p>
-            </div>
-
-            <div className="preset-grid saved-preset-grid">
-              {savedQuizzes.map((quiz) => {
-                const seenCount = quiz.seenQuestionIds?.length ?? 0;
-                const totalCount = quiz.questions.length;
-                const isFullRotation = seenCount >= totalCount;
-                const progressPct = totalCount ? Math.round((seenCount / totalCount) * 100) : 0;
-
-                return (
-                  <div className="preset-card saved-card" key={quiz.id}>
-                    <div className="preset-graphic saved-graphic">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="10" y1="10" x2="14" y2="10" />
-                      </svg>
-                    </div>
-
-                    <div className="saved-meta">
-                      <strong>{quiz.title}</strong>
-                      <small>{totalCount} total questions</small>
-                    </div>
-
-                    <div className="rotation-pill" title={`${seenCount} of ${totalCount} questions done in this rotation`}>
-                      <div className="rotation-pill-text">
-                        <span>{isFullRotation ? '✅ Cycle ready' : `🔄 ${seenCount}/${totalCount} seen`}</span>
-                        <span className="rotation-pct">{progressPct}%</span>
-                      </div>
-                      <div className="rotation-bar-bg">
-                        <div className="rotation-bar-fill" style={{ width: `${progressPct}%` }} />
-                      </div>
-                    </div>
-
-                    <div className="saved-card-footer">
-                      <Button
-                        className="saved-play-button"
-                        onClick={() => startSavedQuiz(quiz)}
-                        variant="solid"
-                      >
-                        Play run
-                      </Button>
-                      <div className="saved-card-actions">
-                        <button
-                          className="action-icon-button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onResetRotation(quiz.id);
-                          }}
-                          title="Restart rotation from 0"
-                          type="button"
-                          aria-label="Reset rotation"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                            <path d="M3 3v5h5" />
-                          </svg>
-                        </button>
-                        <button
-                          className="action-icon-button is-danger"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (window.confirm(`Delete "${quiz.title}" from saved quizzes?`)) {
-                              onDeleteSavedQuiz(quiz.id);
-                            }
-                          }}
-                          title="Delete saved quiz"
-                          type="button"
-                          aria-label="Delete quiz"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 6h18" />
-                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-
-        <div className="presets-section-heading">
-          <p className="section-kicker">Presets & Custom</p>
-          <h2>Standard library</h2>
+          <p>Each run shuffles the source and loads up to {selectedQuestionCount} questions.</p>
         </div>
 
         <div className="preset-grid">
@@ -531,8 +424,8 @@ export function QuizLibraryPage({
       {modalOpen ? (
         <AddCustomQuizModal
           close={() => setModalOpen(false)}
-          onStartCustomQuiz={(questions, title, saveToLibrary) => {
-            onStartCustomQuiz(questions, title, saveToLibrary);
+          onStartCustomQuiz={(questions, title) => {
+            onStartCustomQuiz(questions, title);
             setModalOpen(false);
           }}
         />
@@ -564,13 +457,12 @@ Answer: B`;
 
 type AddCustomQuizModalProps = {
   close: () => void;
-  onStartCustomQuiz: (questions: Question[], title: string, saveToLibrary: boolean) => void;
+  onStartCustomQuiz: (questions: Question[], title: string) => void;
 };
 
 function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProps) {
   const [quizTitle, setQuizTitle] = React.useState('');
   const [pasteText, setPasteText] = React.useState('');
-  const [saveQuizOption, setSaveQuizOption] = React.useState(true);
   const [parseError, setParseError] = React.useState('');
 
   async function handlePasteFromClipboard() {
@@ -619,7 +511,7 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
     try {
       const parsed = parseQuestions(trimmed);
       const title = quizTitle.trim() || 'Custom Quiz';
-      onStartCustomQuiz(parsed, title, saveQuizOption);
+      onStartCustomQuiz(parsed, title);
     } catch (err) {
       setParseError(err instanceof Error ? err.message : 'Invalid question format.');
     }
@@ -635,7 +527,7 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
         <p className="section-kicker">Custom Quiz</p>
         <h2 id="custom-quiz-modal-title">Paste your quiz & play</h2>
         <p className="modal-lead">
-          Paste your questions directly below to start immediately. Save to library to rotate questions without repeats.
+          Paste your questions directly below from your clipboard or text, or import a .txt file.
         </p>
 
         <div className="custom-quiz-form">
@@ -704,15 +596,6 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
           </div>
 
           <div className="modal-options-row">
-            <label className="save-checkbox-label">
-              <input
-                type="checkbox"
-                checked={saveQuizOption}
-                onChange={(e) => setSaveQuizOption(e.target.checked)}
-              />
-              <span>Save to library (tracks question rotation without repeating)</span>
-            </label>
-
             <label className="modal-file-link">
               <input
                 className="sr-only"

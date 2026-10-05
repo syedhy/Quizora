@@ -6,24 +6,17 @@ import {
   STATS_KEY,
   countCorrect,
   defaultSettings,
-  deleteSavedQuiz,
   modes,
   parseQuestions,
   percent,
-  readSavedQuizzes,
   readStats,
-  resetSavedQuizRotation,
-  saveQuiz,
   selectQuestions,
-  selectQuestionsWithRotation,
-  updateSavedQuizSeen,
   type FinishReason,
   type OptionKey,
   type Question,
   type QuizPreset,
   type QuizSettings,
   type QuizStats,
-  type SavedQuiz,
   type Screen,
 } from '@/quiz';
 
@@ -41,9 +34,6 @@ function App() {
   const [sourceTotal, setSourceTotal] = React.useState(0);
   const [timeLeft, setTimeLeft] = React.useState(defaultSettings.secondsPerQuestion);
   const [livesLeft, setLivesLeft] = React.useState(defaultSettings.lives);
-  const [savedQuizzes, setSavedQuizzes] = React.useState<SavedQuiz[]>(() => readSavedQuizzes());
-  const [activeSavedQuizId, setActiveSavedQuizId] = React.useState<string | null>(null);
-  const [rotationInfo, setRotationInfo] = React.useState('');
   const [uploadError, setUploadError] = React.useState('');
   const [stats, setStats] = React.useState<QuizStats>(() => readStats());
 
@@ -153,52 +143,11 @@ function App() {
   }
 
   function startPreset(preset: QuizPreset) {
-    setActiveSavedQuizId(null);
-    setRotationInfo('');
     startQuestionRun(preset.questions, preset.title);
   }
 
-  function startSavedQuiz(savedQuiz: SavedQuiz) {
-    const result = selectQuestionsWithRotation(savedQuiz, settings.questionCount);
-    setQuestions(result.questions);
-    setSourceQuestions(savedQuiz.questions);
-    setSourceTitle(savedQuiz.title);
-    setSourceTotal(savedQuiz.questions.length);
-    setActiveSavedQuizId(savedQuiz.id);
-
-    const seenNow = result.nextSeenIds.length;
-    const progressText = `${seenNow}/${result.totalQuestions} questions`;
-    setRotationInfo(result.isNewCycle ? `New rotation cycle (${progressText})` : `Rotation: ${progressText}`);
-
-    // Update rotation in storage
-    const updated = updateSavedQuizSeen(savedQuiz.id, result.questions.map((q) => q.id));
-    setSavedQuizzes(updated);
-
-    resetRunState();
-    setScreen('quiz');
-  }
-
-  function startCustomQuiz(parsedQuestions: Question[], title: string, saveToLibrary: boolean) {
-    if (saveToLibrary) {
-      const saved = saveQuiz(title, parsedQuestions);
-      setSavedQuizzes(readSavedQuizzes());
-      startSavedQuiz(saved);
-      return;
-    }
-
-    setActiveSavedQuizId(null);
-    setRotationInfo('');
+  function startCustomQuiz(parsedQuestions: Question[], title: string) {
     startQuestionRun(parsedQuestions, title);
-  }
-
-  function handleDeleteSavedQuiz(id: string) {
-    const updated = deleteSavedQuiz(id);
-    setSavedQuizzes(updated);
-  }
-
-  function handleResetSavedQuizRotation(id: string) {
-    const updated = resetSavedQuizRotation(id);
-    setSavedQuizzes(updated);
   }
 
   function finishQuiz(reason: FinishReason = 'complete', finalAnswers = answers) {
@@ -264,15 +213,6 @@ function App() {
   }
 
   function restartQuiz() {
-    if (activeSavedQuizId) {
-      const currentList = readSavedQuizzes();
-      const currentSaved = currentList.find((q) => q.id === activeSavedQuizId);
-      if (currentSaved) {
-        startSavedQuiz(currentSaved);
-        return;
-      }
-    }
-
     if (!questions.length) {
       setScreen('library');
       return;
@@ -289,13 +229,9 @@ function App() {
     return (
       <QuizLibraryPage
         goBack={() => setScreen('setup')}
-        onDeleteSavedQuiz={handleDeleteSavedQuiz}
-        onResetRotation={handleResetSavedQuizRotation}
         onStartCustomQuiz={startCustomQuiz}
-        savedQuizzes={savedQuizzes}
         selectedQuestionCount={settings.questionCount}
         startPreset={startPreset}
-        startSavedQuiz={startSavedQuiz}
         uploadError={uploadError}
       />
     );
@@ -316,7 +252,6 @@ function App() {
         livesLeft={livesLeft}
         progress={progress}
         questionCount={questions.length}
-        rotationInfo={rotationInfo}
         score={score}
         settings={settings}
         sourceTitle={sourceTitle}

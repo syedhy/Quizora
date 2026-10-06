@@ -882,6 +882,7 @@ button:disabled {
   overflow-x: hidden;
   overflow-y: auto;
   padding: clamp(18px, 2.5vw, 28px);
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
@@ -1047,6 +1048,19 @@ button:disabled {
   flex-wrap: wrap;
   gap: 0.55rem;
   position: relative;
+}
+
+.result-actions button {
+  cursor: pointer;
+  transform: none !important;
+}
+
+.result-actions button:hover {
+  transform: none !important;
+}
+
+.result-actions button:active {
+  transform: scale(0.97) !important;
 }
 
 .result-idea-link {

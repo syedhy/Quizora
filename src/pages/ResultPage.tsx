@@ -115,7 +115,7 @@ export function ResultPage({
               </CardItem>
             </div>
 
-            <CardItem className="result-bottom-group" translateZ={40}>
+            <CardItem className="result-bottom-group" translateZ={0}>
               <div className="result-actions">
                 <Button onClick={restartQuiz} variant="solid">
                   Try again

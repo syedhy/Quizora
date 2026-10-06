@@ -7,17 +7,18 @@ export function CardContainer({ className, children, ...props }: CardContainerPr
   const ref = React.useRef<HTMLDivElement>(null);
 
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    const container = event.currentTarget;
     const element = ref.current;
 
-    if (!element) {
+    if (!container || !element) {
       return;
     }
 
-    const rect = element.getBoundingClientRect();
+    const rect = container.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const rotateY = (x / rect.width - 0.5) * 7;
-    const rotateX = (0.5 - y / rect.height) * 7;
+    const rotateY = (x / rect.width - 0.5) * 4;
+    const rotateX = (0.5 - y / rect.height) * 4;
 
     element.style.transform = `perspective(1100px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   }

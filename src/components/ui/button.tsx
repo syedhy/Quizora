@@ -9,9 +9,9 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<ButtonVariant, string> = {
   solid:
-    'rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--primary-foreground))] transition-transform duration-200 hover:scale-[1.02]',
+    'rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--primary-foreground))] transition-opacity duration-150 hover:opacity-90 active:scale-[0.98]',
   ghost:
-    'rounded-full border border-[hsl(var(--border))] bg-transparent text-[hsl(var(--foreground))] transition-colors duration-200 hover:bg-[hsl(var(--muted))]',
+    'rounded-full border border-[hsl(var(--border))] bg-transparent text-[hsl(var(--foreground))] transition-colors duration-150 hover:bg-[hsl(var(--muted))] active:scale-[0.98]',
 };
 
 export function Button({ className, variant = 'solid', type = 'button', ...props }: ButtonProps) {

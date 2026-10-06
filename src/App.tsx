@@ -105,20 +105,44 @@ function App() {
     setScreen(nextScreen);
   }, []);
 
+  const resetRunState = React.useCallback((nextSettings = settings) => {
+    setAnswers({});
+    setCurrentIndex(0);
+    setFinishReason('complete');
+    setResultReachedCount(0);
+    setResultTotal(0);
+    setTimeLeft(nextSettings.secondsPerQuestion);
+    setLivesLeft(nextSettings.lives);
+  }, [settings]);
+
+  const openSetup = React.useCallback(() => {
+    resetRunState();
+    setUploadError('');
+    goToScreen('setup');
+  }, [goToScreen, resetRunState]);
+
+  const openLibrary = React.useCallback(() => {
+    resetRunState();
+    setUploadError('');
+    goToScreen('library');
+  }, [goToScreen, resetRunState]);
+
   const goBackScreen = React.useCallback(() => {
-    if (typeof window !== 'undefined' && window.history.state?.screen && window.history.state.screen !== 'setup') {
-      window.history.back();
+    const current = screenRef.current;
+    if (current === 'library') {
+      openSetup();
       return;
     }
-    const current = screenRef.current;
-    if (current === 'results') {
-      goToScreen('library');
-    } else if (current === 'quiz') {
-      goToScreen('library');
-    } else if (current === 'library') {
-      goToScreen('setup');
+    if (current === 'quiz') {
+      openLibrary();
+      return;
     }
-  }, [goToScreen]);
+    if (current === 'results') {
+      openLibrary();
+      return;
+    }
+    openSetup();
+  }, [openLibrary, openSetup]);
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -131,7 +155,11 @@ function App() {
       const targetScreen = (e.state?.screen as Screen) || 'setup';
       if (targetScreen === 'quiz') {
         // Prevent popping back into a finished quiz; route safely to library
-        setScreen('library');
+        openLibrary();
+        return;
+      }
+      if (targetScreen === 'setup') {
+        openSetup();
         return;
       }
       setScreen(targetScreen);
@@ -192,16 +220,6 @@ function App() {
     window.localStorage.setItem(STATS_KEY, JSON.stringify(nextStats));
   }
 
-  function resetRunState(nextSettings = settings) {
-    setAnswers({});
-    setCurrentIndex(0);
-    setFinishReason('complete');
-    setResultReachedCount(0);
-    setResultTotal(0);
-    setTimeLeft(nextSettings.secondsPerQuestion);
-    setLivesLeft(nextSettings.lives);
-  }
-
   function updateSettings(nextSettings: QuizSettings) {
     setSettings(nextSettings);
     setTimeLeft(nextSettings.secondsPerQuestion);
@@ -223,18 +241,6 @@ function App() {
     };
 
     persistStats(nextStats);
-  }
-
-  function openSetup() {
-    resetRunState();
-    setUploadError('');
-    goToScreen('setup');
-  }
-
-  function openLibrary() {
-    resetRunState();
-    setUploadError('');
-    goToScreen('library');
   }
 
   function startQuestionRun(sourceQuestions: Question[], title: string, resetRotation = true) {
@@ -341,7 +347,7 @@ function App() {
   if (screen === 'library') {
     return (
       <QuizLibraryPage
-        goBack={goBackScreen}
+        goBack={openSetup}
         onStartCustomQuiz={startCustomQuiz}
         selectedQuestionCount={settings.questionCount}
         startPreset={startPreset}
@@ -359,7 +365,7 @@ function App() {
         currentIndex={currentIndex}
         currentQuestion={currentQuestion}
         finishQuiz={() => finishQuiz('manual')}
-        goBack={goBackScreen}
+        goBack={openLibrary}
         goNext={goNext}
         goPrevious={goPrevious}
         livesLeft={livesLeft}

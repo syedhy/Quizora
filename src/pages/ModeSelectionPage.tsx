@@ -455,6 +455,15 @@ C) Aluminum
 D) Copper
 Answer: B`;
 
+const AI_SHORT_PROMPT = `Generate - questions on - in this format:
+
+Question: [question]
+A) [option A]
+B) [option B]
+C) [option C]
+D) [option D]
+Answer: [A/B/C/D]`;
+
 type AddCustomQuizModalProps = {
   close: () => void;
   onStartCustomQuiz: (questions: Question[], title: string) => void;
@@ -463,10 +472,7 @@ type AddCustomQuizModalProps = {
 function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProps) {
   const [pasteText, setPasteText] = React.useState('');
   const [parseError, setParseError] = React.useState('');
-  const [aiTopic, setAiTopic] = React.useState('');
-  const [aiCount, setAiCount] = React.useState(20);
   const [copiedPrompt, setCopiedPrompt] = React.useState(false);
-  const [showPromptPreview, setShowPromptPreview] = React.useState(false);
   const [customTitle, setCustomTitle] = React.useState('Custom Quiz');
 
   const questionCountDetected = React.useMemo(() => {
@@ -478,46 +484,15 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
     }
   }, [pasteText]);
 
-  const generatedAiPrompt = React.useMemo(() => {
-    const topic = aiTopic.trim() || 'General Knowledge';
-    const count = Math.max(1, Math.min(200, Number(aiCount) || 20));
-    return `Generate exactly ${count} multiple-choice quiz questions on the topic "${topic}".
-
-STRICT OUTPUT FORMAT RULES:
-- Output ONLY the questions, separated by a single blank line between each question.
-- Do NOT include any introductory or concluding text, explanations, or commentary.
-- Do NOT use markdown bolding (**Question**, **A)**, etc.).
-- Follow this exact format template for each question:
-
-Question: [Question prompt]
-A) [First option]
-B) [Second option]
-C) [Third option]
-D) [Fourth option]
-Answer: [Correct option letter: A, B, C, or D]
-
-Example:
-Question: What is the capital of France?
-A) London
-B) Paris
-C) Berlin
-D) Rome
-Answer: B
-
-Now generate all ${count} questions for "${topic}" below:`;
-  }, [aiTopic, aiCount]);
-
-  async function handleCopyAiPrompt() {
+  async function handleCopyPrompt() {
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(generatedAiPrompt);
+        await navigator.clipboard.writeText(AI_SHORT_PROMPT);
         setCopiedPrompt(true);
-        window.setTimeout(() => setCopiedPrompt(false), 2500);
-      } else {
-        setShowPromptPreview(true);
+        window.setTimeout(() => setCopiedPrompt(false), 2000);
       }
     } catch {
-      setShowPromptPreview(true);
+      // ignore
     }
   }
 
@@ -580,88 +555,34 @@ Now generate all ${count} questions for "${topic}" below:`;
           Close
         </button>
 
-        <p className="section-kicker">Add Your Own Quiz</p>
+        <p className="section-kicker">Custom Quiz</p>
         <h2 id="custom-quiz-modal-title">Paste your quiz & play</h2>
         <p className="modal-lead">
-          Generate questions using AI or paste your own questions directly below.
+          Copy the short prompt below for AI, or paste your questions directly into the box.
         </p>
 
         <div className="custom-quiz-form">
-          <div className="ai-prompt-box">
-            <div className="ai-prompt-header">
-              <div>
-                <span className="ai-badge">✨ AI Prompt Generator</span>
-                <p className="ai-prompt-sub">
-                  Copy this prompt into ChatGPT, Claude, or Gemini to get questions in the exact format:
-                </p>
-              </div>
+          <div className="ai-short-prompt-card">
+            <div className="ai-short-prompt-header">
+              <span className="ai-short-prompt-label">AI Prompt Template</span>
               <button
                 type="button"
                 className={cn('ai-copy-btn', copiedPrompt && 'is-copied')}
-                onClick={handleCopyAiPrompt}
+                onClick={handleCopyPrompt}
               >
-                {copiedPrompt ? '✓ Copied prompt!' : '📋 Copy AI Prompt'}
+                {copiedPrompt ? '✓ Copied!' : '📋 Copy prompt'}
               </button>
             </div>
-
-            <div className="ai-prompt-controls">
-              <div className="ai-control-field topic-field">
-                <label htmlFor="ai-topic">Topic</label>
-                <input
-                  id="ai-topic"
-                  className="modal-input"
-                  type="text"
-                  placeholder="e.g. World Capitals, React Hooks, Biology"
-                  value={aiTopic}
-                  onChange={(e) => setAiTopic(e.target.value)}
-                />
-              </div>
-
-              <div className="ai-control-field count-field">
-                <label htmlFor="ai-count">Questions</label>
-                <input
-                  id="ai-count"
-                  className="modal-input"
-                  type="number"
-                  min={1}
-                  max={200}
-                  value={aiCount}
-                  onChange={(e) => setAiCount(Math.max(1, parseInt(e.target.value) || 1))}
-                />
-              </div>
-            </div>
-
-            <div className="ai-prompt-actions">
-              <button
-                type="button"
-                className="ai-preview-toggle"
-                onClick={() => setShowPromptPreview(!showPromptPreview)}
-              >
-                {showPromptPreview ? '▴ Hide prompt preview' : '▾ View prompt preview'}
-              </button>
-              <span className="ai-steps-hint">
-                Copy prompt → Paste in AI → Paste response below
-              </span>
-            </div>
-
-            {showPromptPreview ? (
-              <textarea
-                className="modal-textarea ai-preview-box"
-                rows={5}
-                readOnly
-                value={generatedAiPrompt}
-                onClick={(e) => (e.target as HTMLTextAreaElement).select()}
-              />
-            ) : null}
+            <pre className="ai-short-prompt-code">{AI_SHORT_PROMPT}</pre>
           </div>
 
           <div className="modal-field">
             <div className="modal-field-header">
               <label htmlFor="custom-quiz-text">
-                Quiz Questions
+                Paste Questions
                 {questionCountDetected > 0 ? (
                   <span className="detected-count-badge">
-                    ({questionCountDetected} questions ready)
+                    ({questionCountDetected} questions detected)
                   </span>
                 ) : null}
               </label>
@@ -703,7 +624,7 @@ Now generate all ${count} questions for "${topic}" below:`;
             <textarea
               id="custom-quiz-text"
               className="modal-textarea"
-              rows={7}
+              rows={8}
               placeholder={`Question: What is the capital of France?\nA) London\nB) Paris\nC) Berlin\nD) Rome\nAnswer: B`}
               value={pasteText}
               onChange={(e) => {

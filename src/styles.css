@@ -268,8 +268,7 @@ button:disabled {
   max-width: 560px;
 }
 
-.setup-panel,
-.upload-modal {
+.setup-panel {
   background: var(--card-overlay);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -1090,17 +1089,23 @@ button:disabled {
 
 .modal-backdrop {
   align-items: center;
-  background: rgba(14, 19, 31, 0.58);
+  background: rgba(10, 14, 23, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   inset: 0;
   justify-content: center;
   padding: clamp(16px, 4vmin, 42px);
   position: fixed;
-  z-index: 20;
+  z-index: 50;
 }
 
 .upload-modal {
-  max-height: min(86dvh, 680px);
+  background: hsl(var(--surface));
+  border: 1px solid hsl(var(--border));
+  border-radius: 20px;
+  box-shadow: 0 24px 60px -12px hsl(var(--shadow-ink) / 0.35), 0 0 0 1px hsl(var(--border));
+  max-height: min(88dvh, 720px);
   overflow: auto;
   padding: clamp(20px, 4vmin, 34px);
   position: relative;
@@ -1144,8 +1149,9 @@ button:disabled {
 
 /* Custom Quiz Modal (Direct Paste) */
 .custom-quiz-modal {
-  max-height: min(90dvh, 760px);
-  width: min(94vw, 680px);
+  background: hsl(var(--surface));
+  max-height: min(92dvh, 760px);
+  width: min(94vw, 640px);
 }
 
 .modal-lead {
@@ -1161,41 +1167,43 @@ button:disabled {
   gap: 1rem;
 }
 
-/* AI Prompt Generator in Custom Modal */
-.ai-prompt-box {
-  background: linear-gradient(135deg, hsl(var(--foreground) / 0.05), hsl(var(--foreground) / 0.02));
-  border: 1px solid hsl(var(--border) / 0.85);
-  border-radius: 14px;
+/* Short AI Prompt Template in Custom Modal */
+.ai-short-prompt-card {
+  background: hsl(var(--muted) / 0.45);
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  padding: 0.85rem 1rem;
+  gap: 0.45rem;
+  padding: 0.75rem 0.85rem;
 }
 
-.ai-prompt-header {
-  align-items: flex-start;
+.ai-short-prompt-header {
+  align-items: center;
   display: flex;
-  gap: 0.75rem;
   justify-content: space-between;
-  flex-wrap: wrap;
 }
 
-.ai-badge {
-  background: hsl(var(--foreground));
-  border-radius: 999px;
-  color: hsl(var(--primary-foreground));
-  display: inline-block;
+.ai-short-prompt-label {
+  color: hsl(var(--muted-foreground));
   font-size: 0.76rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
-  padding: 0.2rem 0.6rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
-.ai-prompt-sub {
-  color: hsl(var(--muted-foreground));
-  font-size: 0.84rem;
-  line-height: 1.4;
-  margin: 0.3rem 0 0;
+.ai-short-prompt-code {
+  background: hsl(var(--surface));
+  border: 1px solid hsl(var(--border) / 0.8);
+  border-radius: 8px;
+  color: hsl(var(--foreground));
+  font-family: var(--font-mono, monospace);
+  font-size: 0.81rem;
+  line-height: 1.45;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  user-select: all;
+  white-space: pre-wrap;
 }
 
 .ai-copy-btn {
@@ -1206,16 +1214,16 @@ button:disabled {
   color: hsl(var(--primary-foreground));
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  gap: 0.4rem;
-  padding: 0.45rem 0.95rem;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
   transition: all 180ms ease;
   white-space: nowrap;
 }
 
 .ai-copy-btn:hover {
-  opacity: 0.92;
+  opacity: 0.9;
   transform: scale(1.02);
 }
 
@@ -1223,68 +1231,6 @@ button:disabled {
   background: #10b981;
   border-color: #10b981;
   color: #ffffff;
-}
-
-.ai-prompt-controls {
-  display: flex;
-  gap: 0.75rem;
-  width: 100%;
-}
-
-.ai-control-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.ai-control-field.topic-field {
-  flex: 1 1 auto;
-}
-
-.ai-control-field.count-field {
-  flex: 0 0 100px;
-}
-
-.ai-control-field label {
-  color: hsl(var(--foreground));
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-
-.ai-prompt-actions {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  justify-content: space-between;
-}
-
-.ai-preview-toggle {
-  background: none;
-  border: none;
-  color: hsl(var(--muted-foreground));
-  cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 800;
-  padding: 0;
-  text-decoration: underline;
-  transition: color 150ms ease;
-}
-
-.ai-preview-toggle:hover {
-  color: hsl(var(--foreground));
-}
-
-.ai-steps-hint {
-  color: hsl(var(--muted-foreground));
-  font-size: 0.74rem;
-  font-weight: 700;
-}
-
-.ai-preview-box {
-  background: hsl(var(--background));
-  font-size: 0.8rem;
-  margin-top: 0.2rem;
 }
 
 .detected-count-badge {

@@ -90,6 +90,94 @@ function App() {
     return () => window.clearInterval(timer);
   }, [currentIndex, currentQuestion?.id, screen, selectedAnswer, settings.mode, settings.secondsPerQuestion]);
 
+  const screenRef = React.useRef<Screen>(screen);
+  screenRef.current = screen;
+
+  const goToScreen = React.useCallback((nextScreen: Screen, pushHistory = true) => {
+    if (nextScreen === screenRef.current) return;
+    if (pushHistory && typeof window !== 'undefined') {
+      window.history.pushState({ screen: nextScreen }, '', '');
+    }
+    setScreen(nextScreen);
+  }, []);
+
+  const goBackScreen = React.useCallback(() => {
+    if (typeof window !== 'undefined' && window.history.state?.screen && window.history.state.screen !== 'setup') {
+      window.history.back();
+      return;
+    }
+    const current = screenRef.current;
+    if (current === 'results') {
+      goToScreen('library');
+    } else if (current === 'quiz') {
+      goToScreen('library');
+    } else if (current === 'library') {
+      goToScreen('setup');
+    }
+  }, [goToScreen]);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (!window.history.state?.screen) {
+      window.history.replaceState({ screen: 'setup' }, '', '');
+    }
+
+    function handlePopState(e: PopStateEvent) {
+      const targetScreen = (e.state?.screen as Screen) || 'setup';
+      setScreen(targetScreen);
+    }
+
+    function handleGlobalKeyDown(e: KeyboardEvent) {
+      const isInput =
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target instanceof HTMLElement && e.target.isContentEditable);
+
+      // Escape key navigation
+      if (e.key === 'Escape') {
+        const activeModal = document.querySelector('.modal-backdrop');
+        if (activeModal) {
+          // Open dialog will handle its own close
+          return;
+        }
+
+        if (screenRef.current !== 'setup') {
+          e.preventDefault();
+          goBackScreen();
+          return;
+        }
+      }
+
+      // Undo shortcut: Cmd+Z (Mac) or Ctrl+Z (Windows/Linux)
+      const isUndo = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z' && !e.shiftKey;
+      if (isUndo && !isInput) {
+        if (screenRef.current !== 'setup') {
+          e.preventDefault();
+          goBackScreen();
+        }
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('keydown', handleGlobalKeyDown);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [goBackScreen]);
+
+  React.useEffect(() => {
+    const titles: Record<Screen, string> = {
+      setup: 'Quizora · Setup',
+      library: 'Quizora · Library',
+      quiz: `Quizora · ${sourceTitle || 'Quiz'}`,
+      results: `Quizora · Results (${sourceTitle || 'Quiz'})`,
+    };
+    document.title = titles[screen] || 'Quizora';
+  }, [screen, sourceTitle]);
+
   function persistStats(nextStats: QuizStats) {
     setStats(nextStats);
     window.localStorage.setItem(STATS_KEY, JSON.stringify(nextStats));
@@ -131,7 +219,7 @@ function App() {
   function openLibrary() {
     resetRunState();
     setUploadError('');
-    setScreen('library');
+    goToScreen('library');
   }
 
   function startQuestionRun(sourceQuestions: Question[], title: string, resetRotation = true) {
@@ -148,7 +236,7 @@ function App() {
     setSourceTitle(title);
     setSourceTotal(sourceQuestions.length);
     resetRunState();
-    setScreen('quiz');
+    goToScreen('quiz');
   }
 
   function startPreset(preset: QuizPreset) {
@@ -164,7 +252,7 @@ function App() {
     setResultReachedCount(Math.min(currentIndex + 1, questions.length));
     setResultTotal(Object.keys(finalAnswers).length);
     updateStats(finalAnswers);
-    setScreen('results');
+    goToScreen('results');
   }
 
   function advanceAfterAnswer(finalAnswers: Record<string, OptionKey>) {
@@ -238,7 +326,7 @@ function App() {
   if (screen === 'library') {
     return (
       <QuizLibraryPage
-        goBack={() => setScreen('setup')}
+        goBack={goBackScreen}
         onStartCustomQuiz={startCustomQuiz}
         selectedQuestionCount={settings.questionCount}
         startPreset={startPreset}
@@ -256,7 +344,7 @@ function App() {
         currentIndex={currentIndex}
         currentQuestion={currentQuestion}
         finishQuiz={() => finishQuiz('manual')}
-        goBack={() => setScreen('library')}
+        goBack={goBackScreen}
         goNext={goNext}
         goPrevious={goPrevious}
         livesLeft={livesLeft}
@@ -276,7 +364,7 @@ function App() {
       answers={answers}
       fileName={sourceTitle}
       finishReason={finishReason}
-      goModes={() => setScreen('setup')}
+      goModes={goBackScreen}
       percentScore={percentScore}
       questions={questions}
       resultReachedCount={resultReachedCount}

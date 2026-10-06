@@ -21,14 +21,28 @@ import {
 
 type AppHeaderProps = {
   goHome: () => void;
+  onBack?: () => void;
+  backLabel?: string;
 };
 
-export function AppHeader({ goHome }: AppHeaderProps) {
+export function AppHeader({ goHome, onBack, backLabel }: AppHeaderProps) {
   return (
     <header className="app-header">
-      <button className="brand-mark" onClick={goHome} type="button">
-        Quizora
-      </button>
+      <div className="header-brand-group">
+        {onBack ? (
+          <button
+            className="header-back-button"
+            onClick={onBack}
+            type="button"
+            aria-label={`Go back to ${backLabel || 'previous page'}`}
+          >
+            ← {backLabel || 'Back'}
+          </button>
+        ) : null}
+        <button className="brand-mark" onClick={goHome} type="button">
+          Quizora
+        </button>
+      </div>
       <div className="header-actions">
         <ThemeToggleButton />
         <a href="mailto:syedhyderalihamdani@gmail.com?subject=Quizora%20Feedback">Reach Us</a>
@@ -382,7 +396,7 @@ export function QuizLibraryPage({
 
   return (
     <main ref={container} className="page-shell app-page">
-      <AppHeader goHome={goBack} />
+      <AppHeader goHome={goBack} onBack={goBack} backLabel="Setup" />
 
       <section className="library-layout">
         <div className="library-heading">
@@ -475,6 +489,18 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
   const [copiedPrompt, setCopiedPrompt] = React.useState(false);
   const [customTitle, setCustomTitle] = React.useState('Custom Quiz');
 
+  React.useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        close();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [close]);
+
   const questionCountDetected = React.useMemo(() => {
     if (!pasteText.trim()) return 0;
     try {
@@ -549,7 +575,17 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
   }
 
   return (
-    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="custom-quiz-modal-title">
+    <div
+      className="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="custom-quiz-modal-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          close();
+        }
+      }}
+    >
       <section className="upload-modal custom-quiz-modal">
         <button className="modal-close" onClick={close} type="button" aria-label="Close dialog">
           Close

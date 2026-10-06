@@ -61,7 +61,7 @@ export function ResultPage({
 
   return (
     <main ref={container} className="result-page app-page">
-      <AppHeader goHome={goModes} />
+      <AppHeader goHome={goModes} onBack={goModes} backLabel="Library" />
 
       <section className="result-stage">
         <CardContainer className="result-card-tilt">

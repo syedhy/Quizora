@@ -68,47 +68,53 @@ export function ResultPage({
       <section className="result-stage">
         <CardContainer className="result-card-tilt">
           <CardBody className="result-title-card" role="article" aria-label="Quiz results summary">
-            <CardItem className="result-doodle-mark" translateZ={70} aria-hidden="true">
-              <span>{percentScore}%</span>
-            </CardItem>
-            <CardItem translateZ={34}>
-              <p className="section-kicker">{resultCopy[finishReason]}</p>
-            </CardItem>
-            <CardItem translateZ={54}>
-              <h1>{resultLabel}</h1>
-            </CardItem>
-            <CardItem translateZ={38}>
-              <p className="result-score">
-                {score}/{resultTotal} correct in {fileName}
-              </p>
-            </CardItem>
-            {sourceTotal && sourceTotal > questions.length ? (
-              <CardItem translateZ={34}>
-                <div className="pool-rotation-banner">
-                  <span className="pool-rotation-dot" />
-                  <span>
-                    Pool: <strong>{seenCount ?? questions.length}/{sourceTotal}</strong> questions played ·{' '}
-                    {(seenCount ?? questions.length) >= sourceTotal
-                      ? 'All questions shown! Next run starts a new cycle.'
-                      : 'Next run loads fresh unseen questions.'}
-                  </span>
-                </div>
+            <div className="result-hero-group">
+              <CardItem className="result-doodle-mark" translateZ={70} aria-hidden="true">
+                <span>{percentScore}%</span>
               </CardItem>
-            ) : null}
-            <CardItem className="result-meta-grid" translateZ={28} aria-label="Result highlights">
-              <span>
-                <strong>{modeTitle}</strong>
-                Mode
-              </span>
-              <span>
-                <strong>{answeredCount}</strong>
-                Attempted
-              </span>
-              <span>
-                <strong>{skippedCount + notReachedCount}</strong>
-                Skipped
-              </span>
-            </CardItem>
+              <CardItem translateZ={34}>
+                <p className="section-kicker">{resultCopy[finishReason]}</p>
+              </CardItem>
+              <CardItem translateZ={54}>
+                <h1>{resultLabel}</h1>
+              </CardItem>
+              <CardItem translateZ={38}>
+                <p className="result-score">
+                  {score}/{resultTotal} correct in {fileName}
+                </p>
+              </CardItem>
+            </div>
+
+            <div className="result-stats-group">
+              {sourceTotal && sourceTotal > questions.length ? (
+                <CardItem translateZ={34}>
+                  <div className="pool-rotation-banner">
+                    <span className="pool-rotation-dot" />
+                    <span>
+                      Pool: <strong>{seenCount ?? questions.length}/{sourceTotal}</strong> questions played ·{' '}
+                      {(seenCount ?? questions.length) >= sourceTotal
+                        ? 'All questions shown! Next run starts a new cycle.'
+                        : 'Next run loads fresh unseen questions.'}
+                    </span>
+                  </div>
+                </CardItem>
+              ) : null}
+              <CardItem className="result-meta-grid" translateZ={28} aria-label="Result highlights">
+                <span>
+                  <strong>{modeTitle}</strong>
+                  Mode
+                </span>
+                <span>
+                  <strong>{answeredCount}</strong>
+                  Attempted
+                </span>
+                <span>
+                  <strong>{skippedCount + notReachedCount}</strong>
+                  Skipped
+                </span>
+              </CardItem>
+            </div>
+
             <CardItem className="result-bottom-group" translateZ={40}>
               <div className="result-actions">
                 <Button onClick={restartQuiz} variant="solid">

@@ -840,18 +840,18 @@ button:disabled {
 .result-stage {
   align-items: stretch;
   display: grid;
-  gap: clamp(16px, 3vw, 34px);
+  gap: clamp(14px, 2.5vw, 28px);
   grid-template-columns: minmax(320px, 0.72fr) minmax(0, 1fr);
   height: 100%;
   margin: 0 auto;
   min-height: 0;
   overflow: hidden;
-  padding: clamp(14px, 2.4vw, 30px) clamp(14px, 2.4vw, 30px) max(clamp(40px, 6vw, 76px), env(safe-area-inset-bottom));
+  padding: clamp(10px, 1.8vw, 20px) clamp(14px, 2.4vw, 30px) max(clamp(16px, 2.5vw, 28px), env(safe-area-inset-bottom));
   width: min(100%, 1440px);
 }
 
 .result-card-tilt {
-  height: calc(100dvh - 150px);
+  height: calc(100dvh - 110px);
   min-height: 0;
   position: sticky;
   top: 14px;
@@ -868,18 +868,20 @@ button:disabled {
 }
 
 .result-title-card {
-  align-content: center;
+  align-content: start;
   background:
     radial-gradient(circle at 20px 20px, var(--paper-scribble) 1.5px, transparent 2px),
     linear-gradient(155deg, hsl(var(--surface)) 0%, hsl(var(--surface)) 58%, hsl(var(--surface-soft)) 100%);
   background-size: 26px 26px, auto;
-  display: grid;
-  gap: clamp(9px, 1.55dvh, 16px);
-  grid-template-rows: auto auto auto auto auto auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2dvh, 11px);
   height: 100%;
   min-height: 0;
-  overflow: hidden;
-  padding: clamp(18px, 3.2vw, 38px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: clamp(16px, 2.2vw, 24px);
+  scrollbar-width: thin;
 }
 
 .result-title-card::before,
@@ -887,22 +889,23 @@ button:disabled {
   border: 2px solid hsl(var(--foreground));
   border-radius: 50%;
   content: "";
-  opacity: 0.18;
+  opacity: 0.12;
+  pointer-events: none;
   position: absolute;
 }
 
 .result-title-card::before {
-  height: 170px;
-  right: -62px;
-  top: -44px;
-  width: 170px;
+  height: 140px;
+  right: -45px;
+  top: -35px;
+  width: 140px;
 }
 
 .result-title-card::after {
-  bottom: -54px;
-  height: 120px;
-  left: -32px;
-  width: 120px;
+  bottom: -40px;
+  height: 100px;
+  left: -25px;
+  width: 100px;
 }
 
 .result-doodle-mark {
@@ -911,32 +914,33 @@ button:disabled {
   background: hsl(var(--foreground));
   border: 3px solid hsl(var(--foreground));
   border-radius: 48% 52% 46% 54%;
-  box-shadow: 7px 8px 0 hsl(var(--shadow-ink) / 0.14);
+  box-shadow: 5px 6px 0 hsl(var(--shadow-ink) / 0.14);
   color: hsl(var(--foreground));
   display: flex;
+  flex-shrink: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 4.3vw, 3.2rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.95rem);
   font-weight: 900;
   justify-content: center;
   justify-self: start;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0;
   position: relative;
   text-align: center;
-  width: clamp(124px, 15vw, 188px);
+  width: clamp(82px, 9.5vw, 110px);
 }
 
 .result-doodle-mark::before {
   background: hsl(var(--background));
   border-radius: 44% 56% 52% 48%;
   content: "";
-  inset: 10px;
+  inset: 7px;
   position: absolute;
 }
 
 .result-doodle-mark span {
   align-items: center;
   display: flex;
-  inset: 10px;
+  inset: 7px;
   justify-content: center;
   line-height: 0.9;
   overflow: hidden;
@@ -945,16 +949,16 @@ button:disabled {
 }
 
 .result-title-card h1 {
-  font-size: clamp(2.45rem, 5.2vw, 5.35rem);
-  line-height: 0.94;
+  font-size: clamp(1.75rem, 3.2vw, 2.6rem);
+  line-height: 1.02;
   margin: 0;
-  max-width: 8ch;
+  max-width: 10ch;
   position: relative;
 }
 
 .result-score {
   color: hsl(var(--muted-foreground));
-  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
   font-weight: 900;
   line-height: 1.35;
   margin: 0;
@@ -966,13 +970,13 @@ button:disabled {
   align-items: center;
   background: hsl(var(--surface) / 0.85);
   border: 1px solid hsl(var(--border));
-  border-radius: 12px;
+  border-radius: 10px;
   color: hsl(var(--foreground));
   display: flex;
-  font-size: 0.84rem;
-  gap: 0.55rem;
-  line-height: 1.4;
-  padding: 0.55rem 0.8rem;
+  font-size: 0.78rem;
+  gap: 0.5rem;
+  line-height: 1.35;
+  padding: 0.4rem 0.65rem;
   position: relative;
 }
 
@@ -987,7 +991,7 @@ button:disabled {
 
 .result-meta-grid {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.45rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   position: relative;
 }
@@ -998,22 +1002,25 @@ button:disabled {
   border-radius: 10px 8px 12px 9px;
   color: hsl(var(--muted-foreground));
   display: grid;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  padding: 0.6rem 0.72rem;
+  padding: 0.42rem 0.52rem;
   text-transform: uppercase;
 }
 
 .result-meta-grid strong {
   color: hsl(var(--foreground));
   font-family: var(--font-display);
-  font-size: clamp(1.12rem, 2.3vw, 1.65rem);
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
   line-height: 1;
   text-transform: none;
 }
 
 .result-actions {
-  align-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
   position: relative;
 }
 
@@ -1024,11 +1031,11 @@ button:disabled {
   border-radius: 999px;
   color: hsl(var(--foreground));
   display: inline-flex;
-  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
-  font-weight: 900;
+  font-size: clamp(0.76rem, 1.05vw, 0.86rem);
+  font-weight: 800;
   justify-content: center;
   line-height: 1.15;
-  padding: 0.72rem 1rem;
+  padding: 0.45rem 0.85rem;
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -1044,7 +1051,7 @@ button:disabled {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0.75rem;
-  max-height: calc(100dvh - 150px);
+  max-height: calc(100dvh - 110px);
   min-height: 0;
   overflow: hidden;
   padding: clamp(14px, 2vw, 24px);
@@ -1654,28 +1661,28 @@ button:disabled {
 
   .result-title-card,
   .review-panel {
-    max-height: calc(100dvh - 124px);
+    max-height: calc(100dvh - 100px);
   }
 
   .result-card-tilt {
-    height: calc(100dvh - 124px);
+    height: calc(100dvh - 100px);
   }
 
   .result-title-card {
-    gap: 8px;
-    padding: clamp(14px, 2.2vw, 24px);
+    gap: 6px;
+    padding: clamp(12px, 1.8vw, 18px);
   }
 
   .result-doodle-mark {
-    width: clamp(92px, 12vw, 136px);
+    width: clamp(72px, 8.5vw, 88px);
   }
 
   .result-title-card h1 {
-    font-size: clamp(2rem, 4.4vw, 4.1rem);
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
   }
 
   .result-score {
-    font-size: 0.98rem;
+    font-size: 0.88rem;
   }
 
   .result-meta-grid {

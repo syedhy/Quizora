@@ -109,15 +109,15 @@ export function ResultPage({
                 Skipped
               </span>
             </CardItem>
-            <CardItem className="result-actions" translateZ={42}>
-              <Button onClick={restartQuiz} variant="solid">
-                Try again
-              </Button>
-              <Button onClick={goLibrary} variant="ghost">
-                Change quiz
-              </Button>
-            </CardItem>
-            <CardItem translateZ={34}>
+            <CardItem className="result-bottom-group" translateZ={40}>
+              <div className="result-actions">
+                <Button onClick={restartQuiz} variant="solid">
+                  Try again
+                </Button>
+                <Button onClick={goLibrary} variant="ghost">
+                  Change quiz
+                </Button>
+              </div>
               <a
                 className="result-idea-link"
                 href="mailto:syedhyderalihamdani@gmail.com?subject=Quizora%20quiz%20idea"

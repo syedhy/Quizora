@@ -18,7 +18,8 @@ type ResultPageProps = {
   answers: Record<string, OptionKey>;
   fileName: string;
   finishReason: FinishReason;
-  goModes: () => void;
+  goLibrary: () => void;
+  goSetup: () => void;
   percentScore: number;
   questions: Question[];
   resultReachedCount: number;
@@ -34,7 +35,8 @@ export function ResultPage({
   answers,
   fileName,
   finishReason,
-  goModes,
+  goLibrary,
+  goSetup,
   percentScore,
   questions,
   resultReachedCount,
@@ -61,7 +63,7 @@ export function ResultPage({
 
   return (
     <main ref={container} className="result-page app-page">
-      <AppHeader goHome={goModes} onBack={goModes} backLabel="Library" />
+      <AppHeader goHome={goSetup} onBack={goLibrary} backLabel="Library" />
 
       <section className="result-stage">
         <CardContainer className="result-card-tilt">
@@ -111,7 +113,10 @@ export function ResultPage({
               <Button onClick={restartQuiz} variant="solid">
                 Try again
               </Button>
-              <Button onClick={goModes} variant="ghost">
+              <Button onClick={goLibrary} variant="secondary">
+                Choose quiz
+              </Button>
+              <Button onClick={goSetup} variant="ghost">
                 Change setup
               </Button>
             </CardItem>

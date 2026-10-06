@@ -95,8 +95,12 @@ function App() {
 
   const goToScreen = React.useCallback((nextScreen: Screen, pushHistory = true) => {
     if (nextScreen === screenRef.current) return;
-    if (pushHistory && typeof window !== 'undefined') {
-      window.history.pushState({ screen: nextScreen }, '', '');
+    if (typeof window !== 'undefined') {
+      if (pushHistory) {
+        window.history.pushState({ screen: nextScreen }, '', '');
+      } else {
+        window.history.replaceState({ screen: nextScreen }, '', '');
+      }
     }
     setScreen(nextScreen);
   }, []);
@@ -125,6 +129,11 @@ function App() {
 
     function handlePopState(e: PopStateEvent) {
       const targetScreen = (e.state?.screen as Screen) || 'setup';
+      if (targetScreen === 'quiz') {
+        // Prevent popping back into a finished quiz; route safely to library
+        setScreen('library');
+        return;
+      }
       setScreen(targetScreen);
     }
 
@@ -216,6 +225,12 @@ function App() {
     persistStats(nextStats);
   }
 
+  function openSetup() {
+    resetRunState();
+    setUploadError('');
+    goToScreen('setup');
+  }
+
   function openLibrary() {
     resetRunState();
     setUploadError('');
@@ -252,7 +267,7 @@ function App() {
     setResultReachedCount(Math.min(currentIndex + 1, questions.length));
     setResultTotal(Object.keys(finalAnswers).length);
     updateStats(finalAnswers);
-    goToScreen('results');
+    goToScreen('results', false);
   }
 
   function advanceAfterAnswer(finalAnswers: Record<string, OptionKey>) {
@@ -364,7 +379,8 @@ function App() {
       answers={answers}
       fileName={sourceTitle}
       finishReason={finishReason}
-      goModes={goBackScreen}
+      goLibrary={openLibrary}
+      goSetup={openSetup}
       percentScore={percentScore}
       questions={questions}
       resultReachedCount={resultReachedCount}

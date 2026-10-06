@@ -10,7 +10,7 @@ import {
   parseQuestions,
   percent,
   readStats,
-  selectQuestions,
+  selectQuestionsWithRotation,
   type FinishReason,
   type OptionKey,
   type Question,
@@ -25,6 +25,8 @@ function App() {
   const [settings, setSettings] = React.useState<QuizSettings>(defaultSettings);
   const [questions, setQuestions] = React.useState<Question[]>([]);
   const [sourceQuestions, setSourceQuestions] = React.useState<Question[]>([]);
+  const [seenQuestionIds, setSeenQuestionIds] = React.useState<string[]>([]);
+  const [seenSoFarCount, setSeenSoFarCount] = React.useState(0);
   const [answers, setAnswers] = React.useState<Record<string, OptionKey>>({});
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [finishReason, setFinishReason] = React.useState<FinishReason>('complete');
@@ -132,9 +134,16 @@ function App() {
     setScreen('library');
   }
 
-  function startQuestionRun(sourceQuestions: Question[], title: string) {
-    const selectedQuestions = selectQuestions(sourceQuestions, settings.questionCount);
-    setQuestions(selectedQuestions);
+  function startQuestionRun(sourceQuestions: Question[], title: string, resetRotation = true) {
+    const currentSeen = resetRotation ? [] : seenQuestionIds;
+    const { questions: selected, nextSeenIds, seenSoFar } = selectQuestionsWithRotation(
+      sourceQuestions,
+      currentSeen,
+      settings.questionCount,
+    );
+    setSeenQuestionIds(nextSeenIds);
+    setSeenSoFarCount(seenSoFar);
+    setQuestions(selected);
     setSourceQuestions(sourceQuestions);
     setSourceTitle(title);
     setSourceTotal(sourceQuestions.length);
@@ -143,11 +152,11 @@ function App() {
   }
 
   function startPreset(preset: QuizPreset) {
-    startQuestionRun(preset.questions, preset.title);
+    startQuestionRun(preset.questions, preset.title, true);
   }
 
-  function startCustomQuiz(parsedQuestions: Question[], title: string) {
-    startQuestionRun(parsedQuestions, title);
+  function startCustomQuiz(parsedQuestions: Question[], title = 'Custom Quiz') {
+    startQuestionRun(parsedQuestions, title, true);
   }
 
   function finishQuiz(reason: FinishReason = 'complete', finalAnswers = answers) {
@@ -213,12 +222,13 @@ function App() {
   }
 
   function restartQuiz() {
-    if (!questions.length) {
+    const pool = sourceQuestions.length ? sourceQuestions : questions;
+    if (!pool.length) {
       setScreen('library');
       return;
     }
 
-    startQuestionRun(sourceQuestions.length ? sourceQuestions : questions, sourceTitle);
+    startQuestionRun(pool, sourceTitle, false);
   }
 
   if (screen === 'setup') {
@@ -273,7 +283,9 @@ function App() {
       resultTotal={resultTotal}
       restartQuiz={restartQuiz}
       score={score}
+      seenCount={seenSoFarCount}
       selectedMode={settings.mode}
+      sourceTotal={sourceTotal}
     />
   );
 }

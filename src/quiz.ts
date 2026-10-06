@@ -211,3 +211,81 @@ export function selectQuestions(questions: Question[], requestedCount: number) {
   return shuffleQuestions(questions).slice(0, Math.min(requestedCount, questions.length));
 }
 
+export type RotationResult = {
+  isNewCycle: boolean;
+  nextSeenIds: string[];
+  questions: Question[];
+  seenSoFar: number;
+  totalQuestions: number;
+};
+
+export function selectQuestionsWithRotation(
+  sourceQuestions: Question[],
+  seenIds: string[],
+  requestedCount: number,
+): RotationResult {
+  const total = sourceQuestions.length;
+  const countToPick = Math.min(requestedCount, total);
+
+  if (total === 0) {
+    return {
+      isNewCycle: true,
+      nextSeenIds: [],
+      questions: [],
+      seenSoFar: 0,
+      totalQuestions: 0,
+    };
+  }
+
+  const seenSet = new Set(seenIds);
+  let unseen = sourceQuestions.filter((q) => !seenSet.has(q.id));
+  let isNewCycle = false;
+
+  // If all questions in the rotation have already been seen, start fresh cycle
+  if (unseen.length === 0) {
+    unseen = [...sourceQuestions];
+    seenSet.clear();
+    isNewCycle = true;
+  }
+
+  const shuffledUnseen = shuffleQuestions(unseen);
+
+  if (shuffledUnseen.length >= countToPick) {
+    const picked = shuffledUnseen.slice(0, countToPick);
+    const newSeenSet = isNewCycle ? new Set<string>() : new Set(seenSet);
+    picked.forEach((q) => newSeenSet.add(q.id));
+    const seenCount = newSeenSet.size;
+    const nextSeenIds = seenCount >= total ? [] : Array.from(newSeenSet);
+
+    return {
+      isNewCycle,
+      nextSeenIds,
+      questions: picked,
+      seenSoFar: seenCount,
+      totalQuestions: total,
+    };
+  }
+
+  // Unseen has fewer questions than requested count.
+  // Pick all remaining unseen questions first:
+  const picked = [...shuffledUnseen];
+  const neededFromNextCycle = countToPick - picked.length;
+
+  // The cycle completes with the picked questions (all questions of the current cycle shown).
+  // Draw additional questions from the new cycle, avoiding any questions in this batch:
+  const pickedIds = new Set(picked.map((q) => q.id));
+  const nextCyclePool = sourceQuestions.filter((q) => !pickedIds.has(q.id));
+  const additional = shuffleQuestions(nextCyclePool).slice(0, neededFromNextCycle);
+  picked.push(...additional);
+
+  const nextSeenIds = additional.map((q) => q.id);
+
+  return {
+    isNewCycle: true,
+    nextSeenIds,
+    questions: picked,
+    seenSoFar: total,
+    totalQuestions: total,
+  };
+}
+

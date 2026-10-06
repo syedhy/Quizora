@@ -461,9 +461,65 @@ type AddCustomQuizModalProps = {
 };
 
 function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProps) {
-  const [quizTitle, setQuizTitle] = React.useState('');
   const [pasteText, setPasteText] = React.useState('');
   const [parseError, setParseError] = React.useState('');
+  const [aiTopic, setAiTopic] = React.useState('');
+  const [aiCount, setAiCount] = React.useState(20);
+  const [copiedPrompt, setCopiedPrompt] = React.useState(false);
+  const [showPromptPreview, setShowPromptPreview] = React.useState(false);
+  const [customTitle, setCustomTitle] = React.useState('Custom Quiz');
+
+  const questionCountDetected = React.useMemo(() => {
+    if (!pasteText.trim()) return 0;
+    try {
+      return parseQuestions(pasteText).length;
+    } catch {
+      return 0;
+    }
+  }, [pasteText]);
+
+  const generatedAiPrompt = React.useMemo(() => {
+    const topic = aiTopic.trim() || 'General Knowledge';
+    const count = Math.max(1, Math.min(200, Number(aiCount) || 20));
+    return `Generate exactly ${count} multiple-choice quiz questions on the topic "${topic}".
+
+STRICT OUTPUT FORMAT RULES:
+- Output ONLY the questions, separated by a single blank line between each question.
+- Do NOT include any introductory or concluding text, explanations, or commentary.
+- Do NOT use markdown bolding (**Question**, **A)**, etc.).
+- Follow this exact format template for each question:
+
+Question: [Question prompt]
+A) [First option]
+B) [Second option]
+C) [Third option]
+D) [Fourth option]
+Answer: [Correct option letter: A, B, C, or D]
+
+Example:
+Question: What is the capital of France?
+A) London
+B) Paris
+C) Berlin
+D) Rome
+Answer: B
+
+Now generate all ${count} questions for "${topic}" below:`;
+  }, [aiTopic, aiCount]);
+
+  async function handleCopyAiPrompt() {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(generatedAiPrompt);
+        setCopiedPrompt(true);
+        window.setTimeout(() => setCopiedPrompt(false), 2500);
+      } else {
+        setShowPromptPreview(true);
+      }
+    } catch {
+      setShowPromptPreview(true);
+    }
+  }
 
   async function handlePasteFromClipboard() {
     try {
@@ -492,8 +548,9 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
     reader.onload = () => {
       const content = String(reader.result || '');
       setPasteText(content);
-      if (!quizTitle.trim()) {
-        setQuizTitle(file.name.replace(/\.[^.]+$/, '') || file.name);
+      const fileNameWithoutExt = file.name.replace(/\.[^.]+$/, '');
+      if (fileNameWithoutExt) {
+        setCustomTitle(fileNameWithoutExt);
       }
       setParseError('');
     };
@@ -510,8 +567,7 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
 
     try {
       const parsed = parseQuestions(trimmed);
-      const title = quizTitle.trim() || 'Custom Quiz';
-      onStartCustomQuiz(parsed, title);
+      onStartCustomQuiz(parsed, customTitle || 'Custom Quiz');
     } catch (err) {
       setParseError(err instanceof Error ? err.message : 'Invalid question format.');
     }
@@ -524,28 +580,91 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
           Close
         </button>
 
-        <p className="section-kicker">Custom Quiz</p>
+        <p className="section-kicker">Add Your Own Quiz</p>
         <h2 id="custom-quiz-modal-title">Paste your quiz & play</h2>
         <p className="modal-lead">
-          Paste your questions directly below from your clipboard or text, or import a .txt file.
+          Generate questions using AI or paste your own questions directly below.
         </p>
 
         <div className="custom-quiz-form">
-          <div className="modal-field">
-            <label htmlFor="custom-quiz-title">Quiz title (optional)</label>
-            <input
-              id="custom-quiz-title"
-              className="modal-input"
-              type="text"
-              placeholder="e.g. Science Revision, Trivia Night"
-              value={quizTitle}
-              onChange={(e) => setQuizTitle(e.target.value)}
-            />
+          <div className="ai-prompt-box">
+            <div className="ai-prompt-header">
+              <div>
+                <span className="ai-badge">✨ AI Prompt Generator</span>
+                <p className="ai-prompt-sub">
+                  Copy this prompt into ChatGPT, Claude, or Gemini to get questions in the exact format:
+                </p>
+              </div>
+              <button
+                type="button"
+                className={cn('ai-copy-btn', copiedPrompt && 'is-copied')}
+                onClick={handleCopyAiPrompt}
+              >
+                {copiedPrompt ? '✓ Copied prompt!' : '📋 Copy AI Prompt'}
+              </button>
+            </div>
+
+            <div className="ai-prompt-controls">
+              <div className="ai-control-field topic-field">
+                <label htmlFor="ai-topic">Topic</label>
+                <input
+                  id="ai-topic"
+                  className="modal-input"
+                  type="text"
+                  placeholder="e.g. World Capitals, React Hooks, Biology"
+                  value={aiTopic}
+                  onChange={(e) => setAiTopic(e.target.value)}
+                />
+              </div>
+
+              <div className="ai-control-field count-field">
+                <label htmlFor="ai-count">Questions</label>
+                <input
+                  id="ai-count"
+                  className="modal-input"
+                  type="number"
+                  min={1}
+                  max={200}
+                  value={aiCount}
+                  onChange={(e) => setAiCount(Math.max(1, parseInt(e.target.value) || 1))}
+                />
+              </div>
+            </div>
+
+            <div className="ai-prompt-actions">
+              <button
+                type="button"
+                className="ai-preview-toggle"
+                onClick={() => setShowPromptPreview(!showPromptPreview)}
+              >
+                {showPromptPreview ? '▴ Hide prompt preview' : '▾ View prompt preview'}
+              </button>
+              <span className="ai-steps-hint">
+                Copy prompt → Paste in AI → Paste response below
+              </span>
+            </div>
+
+            {showPromptPreview ? (
+              <textarea
+                className="modal-textarea ai-preview-box"
+                rows={5}
+                readOnly
+                value={generatedAiPrompt}
+                onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+              />
+            ) : null}
           </div>
 
           <div className="modal-field">
             <div className="modal-field-header">
-              <label htmlFor="custom-quiz-text">Quiz Questions</label>
+              <label htmlFor="custom-quiz-text">
+                Quiz Questions
+                {questionCountDetected > 0 ? (
+                  <span className="detected-count-badge">
+                    ({questionCountDetected} questions ready)
+                  </span>
+                ) : null}
+              </label>
               <div className="modal-quick-actions">
                 <button
                   type="button"
@@ -560,7 +679,6 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
                   className="quick-action-link"
                   onClick={() => {
                     setPasteText(sampleQuestionsText);
-                    if (!quizTitle) setQuizTitle('Sample Science Quiz');
                     setParseError('');
                   }}
                   title="Insert sample questions"
@@ -585,7 +703,7 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
             <textarea
               id="custom-quiz-text"
               className="modal-textarea"
-              rows={8}
+              rows={7}
               placeholder={`Question: What is the capital of France?\nA) London\nB) Paris\nC) Berlin\nD) Rome\nAnswer: B`}
               value={pasteText}
               onChange={(e) => {

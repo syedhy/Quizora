@@ -25,7 +25,9 @@ type ResultPageProps = {
   resultTotal: number;
   restartQuiz: () => void;
   score: number;
+  seenCount?: number;
   selectedMode: QuizMode;
+  sourceTotal?: number;
 };
 
 export function ResultPage({
@@ -39,7 +41,9 @@ export function ResultPage({
   resultTotal,
   restartQuiz,
   score,
+  seenCount,
   selectedMode,
+  sourceTotal,
 }: ResultPageProps) {
   const answeredCount = questions.filter((question) => answers[question.id]).length;
   const skippedCount = Math.max(0, resultReachedCount - answeredCount);
@@ -76,6 +80,19 @@ export function ResultPage({
                 {score}/{resultTotal} correct in {fileName}
               </p>
             </CardItem>
+            {sourceTotal && sourceTotal > questions.length ? (
+              <CardItem translateZ={34}>
+                <div className="pool-rotation-banner">
+                  <span className="pool-rotation-dot" />
+                  <span>
+                    Pool: <strong>{seenCount ?? questions.length}/{sourceTotal}</strong> questions played ·{' '}
+                    {(seenCount ?? questions.length) >= sourceTotal
+                      ? 'All questions shown! Next run starts a new cycle.'
+                      : 'Next run loads fresh unseen questions.'}
+                  </span>
+                </div>
+              </CardItem>
+            ) : null}
             <CardItem className="result-meta-grid" translateZ={28} aria-label="Result highlights">
               <span>
                 <strong>{modeTitle}</strong>

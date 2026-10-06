@@ -113,11 +113,8 @@ export function ResultPage({
               <Button onClick={restartQuiz} variant="solid">
                 Try again
               </Button>
-              <Button onClick={goLibrary} variant="secondary">
-                Choose quiz
-              </Button>
-              <Button onClick={goSetup} variant="ghost">
-                Change setup
+              <Button onClick={goLibrary} variant="ghost">
+                Change quiz
               </Button>
             </CardItem>
             <CardItem translateZ={34}>

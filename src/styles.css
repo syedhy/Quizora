@@ -1181,52 +1181,68 @@ button:disabled {
 }
 
 
-/* Custom Quiz Modal (Direct Paste) */
+/* Custom Quiz Modal (Spacious Layout) */
 .custom-quiz-modal {
   background: hsl(var(--surface));
-  max-height: min(94dvh, 650px);
-  padding: 1.25rem 1.4rem;
-  width: min(94vw, 560px);
+  max-height: min(94dvh, 780px);
+  padding: clamp(22px, 3.5vw, 32px);
+  width: min(95vw, 860px);
 }
 
 .custom-quiz-modal .modal-close {
-  top: 14px;
-  right: 16px;
+  position: absolute;
+  right: 24px;
+  top: 22px;
 }
 
 .custom-quiz-modal .section-kicker {
-  font-size: 0.72rem;
-  margin: 0;
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
 }
 
 .custom-quiz-modal h2 {
-  font-size: clamp(1.3rem, 2.8vw, 1.65rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  font-weight: 800;
   line-height: 1.15;
-  margin: 0.15rem 0 0.25rem;
+  margin: 0.25rem 0 0.35rem;
 }
 
 .custom-quiz-modal .modal-lead {
   color: hsl(var(--muted-foreground));
-  font-size: 0.84rem;
-  line-height: 1.35;
-  margin: 0 0 0.55rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  margin: 0 0 1rem;
 }
 
-.custom-quiz-modal .custom-quiz-form {
+.custom-quiz-form {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 1rem;
 }
 
-/* Short AI Prompt Template in Custom Modal */
+.custom-quiz-body-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.modal-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Prompt Card in Left Column */
 .ai-short-prompt-card {
   background: hsl(var(--muted) / 0.45);
   border: 1px solid hsl(var(--border));
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.5rem 0.65rem;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
 }
 
 .ai-short-prompt-header {
@@ -1237,26 +1253,24 @@ button:disabled {
 
 .ai-short-prompt-label {
   color: hsl(var(--muted-foreground));
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .ai-short-prompt-code {
   background: hsl(var(--surface));
   border: 1px solid hsl(var(--border) / 0.8);
-  border-radius: 6px;
+  border-radius: 8px;
   color: hsl(var(--foreground));
   font-family: var(--font-mono, monospace);
-  font-size: 0.75rem;
-  line-height: 1.35;
+  font-size: 0.82rem;
+  line-height: 1.45;
   margin: 0;
-  padding: 0.35rem 0.55rem;
+  padding: 0.65rem 0.85rem;
   user-select: all;
   white-space: pre-wrap;
-  max-height: 96px;
-  overflow-y: auto;
 }
 
 .ai-copy-btn {
@@ -1267,10 +1281,10 @@ button:disabled {
   color: hsl(var(--primary-foreground));
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  gap: 0.3rem;
-  padding: 0.25rem 0.6rem;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
   transition: all 180ms ease;
   white-space: nowrap;
 }
@@ -1286,22 +1300,28 @@ button:disabled {
   color: #ffffff;
 }
 
-.detected-count-badge {
-  color: #10b981;
-  font-size: 0.82rem;
-  font-weight: 800;
-  margin-left: 0.35rem;
+.prompt-helpers-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.modal-field {
+/* Paste Area in Right Column */
+.modal-column.paste-column {
+  height: 100%;
+}
+
+.modal-column.paste-column .modal-field {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.5rem;
+  height: 100%;
 }
 
 .modal-field label {
   color: hsl(var(--foreground));
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   font-weight: 800;
 }
 
@@ -1310,14 +1330,21 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.5rem;
+}
+
+.detected-count-badge {
+  color: #10b981;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-left: 0.35rem;
 }
 
 .modal-quick-actions {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
 .quick-action-link {
@@ -1328,9 +1355,9 @@ button:disabled {
   color: hsl(var(--foreground));
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 0.2rem 0.5rem;
+  padding: 0.25rem 0.6rem;
   transition: background 150ms ease, border-color 150ms ease;
 }
 
@@ -1339,51 +1366,45 @@ button:disabled {
   border-color: hsl(var(--foreground) / 0.3);
 }
 
-.modal-input {
+.modal-textarea {
   background: hsl(var(--surface));
   border: 1px solid hsl(var(--border));
   border-radius: 10px;
   color: hsl(var(--foreground));
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 0.65rem 0.9rem;
-  width: 100%;
-}
-
-.modal-input:focus,
-.modal-textarea:focus {
-  border-color: hsl(var(--foreground));
-  outline: none;
-}
-
-.modal-textarea {
-  background: hsl(var(--surface));
-  border: 1px solid hsl(var(--border));
-  border-radius: 8px;
-  color: hsl(var(--foreground));
+  flex: 1;
   font-family: var(--font-mono, monospace);
-  font-size: 0.8rem;
-  line-height: 1.45;
-  padding: 0.5rem 0.7rem;
+  font-size: 0.84rem;
+  height: 100%;
+  line-height: 1.5;
+  min-height: 200px;
+  padding: 0.7rem 0.85rem;
   resize: vertical;
-  min-height: 80px;
-  max-height: 160px;
   width: 100%;
 }
 
 .modal-error {
   margin: 0;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.82rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.86rem;
 }
 
 .modal-actions-footer {
   align-items: center;
   display: flex;
-  gap: 0.65rem;
+  gap: 0.8rem;
   justify-content: flex-end;
-  margin-top: 0.2rem;
+  margin-top: 0.4rem;
+}
+
+@media (max-width: 768px) {
+  .custom-quiz-body-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .modal-textarea {
+    min-height: 150px;
+  }
 }
 
 @media (max-width: 1040px) {

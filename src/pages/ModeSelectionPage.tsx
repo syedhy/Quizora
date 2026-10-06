@@ -470,6 +470,7 @@ D) Copper
 Answer: B`;
 
 const AI_SHORT_PROMPT = `Generate - questions on - in this format:
+
 Question: [question]
 A) [option A]
 B) [option B]
@@ -597,39 +598,23 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
         </p>
 
         <div className="custom-quiz-form">
-          <div className="ai-short-prompt-card">
-            <div className="ai-short-prompt-header">
-              <span className="ai-short-prompt-label">AI Prompt Template</span>
-              <button
-                type="button"
-                className={cn('ai-copy-btn', copiedPrompt && 'is-copied')}
-                onClick={handleCopyPrompt}
-              >
-                {copiedPrompt ? '✓ Copied!' : '📋 Copy prompt'}
-              </button>
-            </div>
-            <pre className="ai-short-prompt-code">{AI_SHORT_PROMPT}</pre>
-          </div>
+          <div className="custom-quiz-body-grid">
+            <div className="modal-column prompt-column">
+              <div className="ai-short-prompt-card">
+                <div className="ai-short-prompt-header">
+                  <span className="ai-short-prompt-label">AI Prompt Template</span>
+                  <button
+                    type="button"
+                    className={cn('ai-copy-btn', copiedPrompt && 'is-copied')}
+                    onClick={handleCopyPrompt}
+                  >
+                    {copiedPrompt ? '✓ Copied!' : '📋 Copy prompt'}
+                  </button>
+                </div>
+                <pre className="ai-short-prompt-code">{AI_SHORT_PROMPT}</pre>
+              </div>
 
-          <div className="modal-field">
-            <div className="modal-field-header">
-              <label htmlFor="custom-quiz-text">
-                Paste Questions
-                {questionCountDetected > 0 ? (
-                  <span className="detected-count-badge">
-                    ({questionCountDetected} questions detected)
-                  </span>
-                ) : null}
-              </label>
-              <div className="modal-quick-actions">
-                <button
-                  type="button"
-                  className="quick-action-link"
-                  onClick={handlePasteFromClipboard}
-                  title="Paste from system clipboard"
-                >
-                  📋 Paste
-                </button>
+              <div className="prompt-helpers-row">
                 <label className="quick-action-link file-upload-link" title="Import from a .txt file">
                   <input
                     className="sr-only"
@@ -648,34 +633,59 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
                   }}
                   title="Insert sample questions"
                 >
-                  Sample
+                  Insert Sample
                 </button>
-                {pasteText ? (
-                  <button
-                    type="button"
-                    className="quick-action-link"
-                    onClick={() => {
-                      setPasteText('');
-                      setParseError('');
-                    }}
-                  >
-                    Clear
-                  </button>
-                ) : null}
               </div>
             </div>
 
-            <textarea
-              id="custom-quiz-text"
-              className="modal-textarea"
-              rows={4}
-              placeholder={`Question: What is the capital of France?\nA) London\nB) Paris\nC) Berlin\nD) Rome\nAnswer: B`}
-              value={pasteText}
-              onChange={(e) => {
-                setPasteText(e.target.value);
-                if (parseError) setParseError('');
-              }}
-            />
+            <div className="modal-column paste-column">
+              <div className="modal-field">
+                <div className="modal-field-header">
+                  <label htmlFor="custom-quiz-text">
+                    Paste Questions
+                    {questionCountDetected > 0 ? (
+                      <span className="detected-count-badge">
+                        ({questionCountDetected} questions detected)
+                      </span>
+                    ) : null}
+                  </label>
+                  <div className="modal-quick-actions">
+                    <button
+                      type="button"
+                      className="quick-action-link"
+                      onClick={handlePasteFromClipboard}
+                      title="Paste from system clipboard"
+                    >
+                      📋 Paste Clipboard
+                    </button>
+                    {pasteText ? (
+                      <button
+                        type="button"
+                        className="quick-action-link"
+                        onClick={() => {
+                          setPasteText('');
+                          setParseError('');
+                        }}
+                      >
+                        Clear
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+
+                <textarea
+                  id="custom-quiz-text"
+                  className="modal-textarea"
+                  rows={8}
+                  placeholder={`Question: What is the capital of France?\nA) London\nB) Paris\nC) Berlin\nD) Rome\nAnswer: B`}
+                  value={pasteText}
+                  onChange={(e) => {
+                    setPasteText(e.target.value);
+                    if (parseError) setParseError('');
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           {parseError ? (

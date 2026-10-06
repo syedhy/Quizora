@@ -470,7 +470,6 @@ D) Copper
 Answer: B`;
 
 const AI_SHORT_PROMPT = `Generate - questions on - in this format:
-
 Question: [question]
 A) [option A]
 B) [option B]
@@ -629,8 +628,17 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
                   onClick={handlePasteFromClipboard}
                   title="Paste from system clipboard"
                 >
-                  📋 Paste Clipboard
+                  📋 Paste
                 </button>
+                <label className="quick-action-link file-upload-link" title="Import from a .txt file">
+                  <input
+                    className="sr-only"
+                    type="file"
+                    accept=".txt,text/plain"
+                    onChange={handleFileLoaded}
+                  />
+                  📁 Import .txt
+                </label>
                 <button
                   type="button"
                   className="quick-action-link"
@@ -640,7 +648,7 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
                   }}
                   title="Insert sample questions"
                 >
-                  Insert Sample
+                  Sample
                 </button>
                 {pasteText ? (
                   <button
@@ -660,7 +668,7 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
             <textarea
               id="custom-quiz-text"
               className="modal-textarea"
-              rows={8}
+              rows={4}
               placeholder={`Question: What is the capital of France?\nA) London\nB) Paris\nC) Berlin\nD) Rome\nAnswer: B`}
               value={pasteText}
               onChange={(e) => {
@@ -668,18 +676,6 @@ function AddCustomQuizModal({ close, onStartCustomQuiz }: AddCustomQuizModalProp
                 if (parseError) setParseError('');
               }}
             />
-          </div>
-
-          <div className="modal-options-row">
-            <label className="modal-file-link">
-              <input
-                className="sr-only"
-                type="file"
-                accept=".txt,text/plain"
-                onChange={handleFileLoaded}
-              />
-              📁 Or import .txt file
-            </label>
           </div>
 
           {parseError ? (

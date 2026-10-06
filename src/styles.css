@@ -1184,32 +1184,49 @@ button:disabled {
 /* Custom Quiz Modal (Direct Paste) */
 .custom-quiz-modal {
   background: hsl(var(--surface));
-  max-height: min(92dvh, 760px);
-  width: min(94vw, 640px);
+  max-height: min(94dvh, 650px);
+  padding: 1.25rem 1.4rem;
+  width: min(94vw, 560px);
 }
 
-.modal-lead {
+.custom-quiz-modal .modal-close {
+  top: 14px;
+  right: 16px;
+}
+
+.custom-quiz-modal .section-kicker {
+  font-size: 0.72rem;
+  margin: 0;
+}
+
+.custom-quiz-modal h2 {
+  font-size: clamp(1.3rem, 2.8vw, 1.65rem);
+  line-height: 1.15;
+  margin: 0.15rem 0 0.25rem;
+}
+
+.custom-quiz-modal .modal-lead {
   color: hsl(var(--muted-foreground));
-  font-size: 0.95rem;
-  line-height: 1.45;
-  margin: 0.2rem 0 1.2rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  margin: 0 0 0.55rem;
 }
 
-.custom-quiz-form {
+.custom-quiz-modal .custom-quiz-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.55rem;
 }
 
 /* Short AI Prompt Template in Custom Modal */
 .ai-short-prompt-card {
   background: hsl(var(--muted) / 0.45);
   border: 1px solid hsl(var(--border));
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.75rem 0.85rem;
+  gap: 0.35rem;
+  padding: 0.5rem 0.65rem;
 }
 
 .ai-short-prompt-header {
@@ -1220,7 +1237,7 @@ button:disabled {
 
 .ai-short-prompt-label {
   color: hsl(var(--muted-foreground));
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -1229,15 +1246,17 @@ button:disabled {
 .ai-short-prompt-code {
   background: hsl(var(--surface));
   border: 1px solid hsl(var(--border) / 0.8);
-  border-radius: 8px;
+  border-radius: 6px;
   color: hsl(var(--foreground));
   font-family: var(--font-mono, monospace);
-  font-size: 0.81rem;
-  line-height: 1.45;
+  font-size: 0.75rem;
+  line-height: 1.35;
   margin: 0;
-  padding: 0.6rem 0.75rem;
+  padding: 0.35rem 0.55rem;
   user-select: all;
   white-space: pre-wrap;
+  max-height: 96px;
+  overflow-y: auto;
 }
 
 .ai-copy-btn {
@@ -1248,10 +1267,10 @@ button:disabled {
   color: hsl(var(--primary-foreground));
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  gap: 0.35rem;
-  padding: 0.3rem 0.75rem;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
   transition: all 180ms ease;
   white-space: nowrap;
 }
@@ -1274,16 +1293,15 @@ button:disabled {
   margin-left: 0.35rem;
 }
 
-
 .modal-field {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .modal-field label {
   color: hsl(var(--foreground));
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 800;
 }
 
@@ -1292,23 +1310,28 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .modal-quick-actions {
+  align-items: center;
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .quick-action-link {
+  align-items: center;
   background: hsl(var(--muted));
   border: 1px solid hsl(var(--border));
   border-radius: 6px;
   color: hsl(var(--foreground));
-  font-size: 0.78rem;
-  font-weight: 800;
-  padding: 0.25rem 0.55rem;
-  transition: background 150ms ease;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  transition: background 150ms ease, border-color 150ms ease;
 }
 
 .quick-action-link:hover {
@@ -1337,49 +1360,30 @@ button:disabled {
 .modal-textarea {
   background: hsl(var(--surface));
   border: 1px solid hsl(var(--border));
-  border-radius: 10px;
+  border-radius: 8px;
   color: hsl(var(--foreground));
   font-family: var(--font-mono, monospace);
-  font-size: 0.85rem;
-  line-height: 1.5;
-  padding: 0.75rem 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  padding: 0.5rem 0.7rem;
   resize: vertical;
+  min-height: 80px;
+  max-height: 160px;
   width: 100%;
-}
-
-.modal-options-row {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  justify-content: space-between;
-}
-
-.modal-file-link {
-  color: hsl(var(--muted-foreground));
-  cursor: pointer;
-  font-size: 0.84rem;
-  font-weight: 800;
-  text-decoration: underline;
-  transition: color 150ms ease;
-}
-
-.modal-file-link:hover {
-  color: hsl(var(--foreground));
 }
 
 .modal-error {
   margin: 0;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.88rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
 }
 
 .modal-actions-footer {
   align-items: center;
   display: flex;
-  gap: 0.8rem;
+  gap: 0.65rem;
   justify-content: flex-end;
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
 }
 
 @media (max-width: 1040px) {
